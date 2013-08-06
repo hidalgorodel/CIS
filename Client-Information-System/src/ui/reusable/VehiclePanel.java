@@ -50,7 +50,7 @@ public class VehiclePanel extends javax.swing.JPanel implements KeyListener {
                         setVechicle(vehicles.get(selectedIndex));
                     }
                 } catch (Exception e) {
-                    // TODO, log exception
+                    UIValidator.log(e, VehiclePanel.class);
                 }
             }
         });

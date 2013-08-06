@@ -44,7 +44,7 @@ public class CharacterReferenceDependentPanel extends javax.swing.JPanel impleme
                             setCharacterReference(characterReferences.get(selectedIndex));
                         }
                     } catch (Exception e) {
-                        // TODO, log exception
+                        UIValidator.log(e, CharacterReferenceDependentPanel.class);
                     }
                 }
             });
@@ -64,7 +64,7 @@ public class CharacterReferenceDependentPanel extends javax.swing.JPanel impleme
                             setDependent(dependents.get(selectedIndex));
                         }
                     } catch (Exception e) {
-                        // TODO, log exception
+                        UIValidator.log(e, CharacterReferenceDependentPanel.class);
                     }
                 }
             });
@@ -85,6 +85,7 @@ public class CharacterReferenceDependentPanel extends javax.swing.JPanel impleme
         setFieldsEditable(false);
         initTextBoxesListener();
         initTableDependent();
+        initTableCharacterReference();
     }
 
     /**
@@ -296,7 +297,7 @@ public class CharacterReferenceDependentPanel extends javax.swing.JPanel impleme
             txtRefName.setText(chr.getCharRefName());
             txtRefAddress.setText(chr.getCharRefAddress());
             txtRefContact.setText(chr.getCharRefContactNo());
-//            txtRefRelationship.setText(chr.getCharRefRelationship());
+            txtRefRelationship.setText(chr.getCharRelationship());
         }
     }
 

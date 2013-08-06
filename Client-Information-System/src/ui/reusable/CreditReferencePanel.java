@@ -9,7 +9,6 @@ import com.vg.scfc.financing.cis.ent.CreditRef;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -51,13 +50,11 @@ public class CreditReferencePanel extends javax.swing.JPanel implements KeyListe
                             setCreditReference(creditReferences.get(selectedIndex));
                         }
                     } catch (Exception e) {
-                        // TODO, log exception
+                        UIValidator.log(e, CreditReferencePanel.class);
                     }
                 }
             });
-        } else {
-            System.out.println("Null Table");
-        }
+        } 
     }
 
     /**

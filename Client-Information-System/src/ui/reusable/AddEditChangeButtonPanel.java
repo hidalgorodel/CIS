@@ -18,7 +18,12 @@ public class AddEditChangeButtonPanel extends javax.swing.JPanel implements AddE
      */
     public AddEditChangeButtonPanel() {
         initComponents();
-        resetActionStateToDefault();
+        initActionState();
+//        resetActionStateToDefault();
+    }
+
+    private void initActionState() {
+        actionState = ActionState.DEFAULT;
     }
 
     /**
@@ -37,14 +42,84 @@ public class AddEditChangeButtonPanel extends javax.swing.JPanel implements AddE
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         buttonAdd.setText("Add");
+        buttonAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonAddActionPerformed(evt);
+            }
+        });
         add(buttonAdd, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 1, 100, -1));
 
         buttonEdit.setText("Edit");
+        buttonEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonEditActionPerformed(evt);
+            }
+        });
         add(buttonEdit, new org.netbeans.lib.awtextra.AbsoluteConstraints(105, 1, 100, -1));
 
         buttonChange.setText("Change");
+        buttonChange.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonChangeActionPerformed(evt);
+            }
+        });
         add(buttonChange, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 1, 100, -1));
     }// </editor-fold>//GEN-END:initComponents
+
+    private void buttonAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddActionPerformed
+        if (actionState == ActionState.DEFAULT) {
+            onAdd();
+        } else {
+            switch (actionState) {
+                case SAVE:
+                    onCancelAdd();
+                    resetActionStateToDefault();
+                    break;
+                case EDIT:
+                    onSaveEdit();
+                    resetActionStateToDefault();
+                    break;
+            }
+        }
+    }//GEN-LAST:event_buttonAddActionPerformed
+
+    private void buttonEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditActionPerformed
+        if (actionState == ActionState.DEFAULT) {
+            onEdit();
+        } else {
+            switch (actionState) {
+                case SAVE:
+                    onSaveAdd();
+                    resetActionStateToDefault();
+                    break;
+                case EDIT:
+                    onCancelEdit();
+                    resetActionStateToDefault();
+                    break;
+                case CHANGE:
+                    onCancelChange();
+                    resetActionStateToDefault();
+                    break;
+            }
+        }
+    }//GEN-LAST:event_buttonEditActionPerformed
+
+    private void buttonChangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonChangeActionPerformed
+        if (actionState == ActionState.DEFAULT) {
+            onChange();
+        } else {
+            switch (actionState) {
+                case CHANGE:
+                    onSaveChange();
+                    resetActionStateToDefault();
+                    break;
+                case EDIT:
+                    onCancelEdit();
+                    resetActionStateToDefault();
+                    break;
+            }
+        }
+    }//GEN-LAST:event_buttonChangeActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAdd;
@@ -64,7 +139,6 @@ public class AddEditChangeButtonPanel extends javax.swing.JPanel implements AddE
             actionState = ActionState.SAVE;
             buttonAdd.setText("Cancel");
             buttonEdit.setText("Save");
-            buttonChange.setEnabled(false);
             buttonListener.onAdd();
         } else {
             resetActionStateToDefault();
@@ -91,7 +165,6 @@ public class AddEditChangeButtonPanel extends javax.swing.JPanel implements AddE
             actionState = ActionState.EDIT;
             buttonAdd.setText("Save");
             buttonEdit.setText("Cancel");
-            buttonChange.setEnabled(false);
             buttonListener.onEdit();
         } else {
             resetActionStateToDefault();
@@ -116,9 +189,8 @@ public class AddEditChangeButtonPanel extends javax.swing.JPanel implements AddE
     public void onChange() {
         if (buttonChange.getText().equals("Change")) {
             actionState = ActionState.CHANGE;
-            buttonChange.setText("Cancel");
-            buttonEdit.setText("Save");
-            buttonAdd.setEnabled(false);
+            buttonChange.setText("Save");
+            buttonEdit.setText("Cancel");
             buttonListener.onChange();
         } else {
             resetActionStateToDefault();
@@ -143,13 +215,13 @@ public class AddEditChangeButtonPanel extends javax.swing.JPanel implements AddE
         actionState = ActionState.DEFAULT;
         buttonAdd.setText("Add");
         buttonEdit.setText("Edit");
-        enableChange(false);
+        buttonChange.setText("Change");
     }
-    
+
     public void enableAdd(boolean value) {
         buttonAdd.setEnabled(value);
     }
-    
+
     public void enableChange(boolean value) {
         buttonChange.setEnabled(value);
     }

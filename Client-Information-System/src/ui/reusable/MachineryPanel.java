@@ -50,7 +50,7 @@ public class MachineryPanel extends javax.swing.JPanel implements KeyListener {
                         setMachinery(machineries.get(selectedIndex));
                     }
                 } catch (Exception e) {
-                    // TODO, log exception
+                    UIValidator.log(e, MachineryPanel.class);
                 }
             }
         });

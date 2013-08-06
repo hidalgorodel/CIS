@@ -7,6 +7,7 @@ package ui.validator;
 
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import org.slf4j.LoggerFactory;
 import ui.messages.ErrorMessage;
 
 /**
@@ -53,5 +54,9 @@ public class UIValidator {
                 JOptionPane.showMessageDialog(null, ErrorMessage.FAILED_TO_UPDATE, ErrorMessage.ERROR_MESSAGE_TITLE, JOptionPane.WARNING_MESSAGE);
                 break;
         }
+    }
+    
+    public static void log(Exception e, Class c) {
+        LoggerFactory.getLogger(c).error(e.toString());
     }
 }

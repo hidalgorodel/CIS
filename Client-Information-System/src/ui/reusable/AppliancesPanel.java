@@ -9,7 +9,13 @@ import com.vg.scfc.financing.cis.ent.Appliance;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.math.BigDecimal;
+import java.util.LinkedList;
+import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import org.jdesktop.observablecollections.ObservableCollections;
 import ui.controller.ApplianceAssetsController;
 import ui.validator.UIValidator;
 
@@ -24,7 +30,6 @@ public class AppliancesPanel extends javax.swing.JPanel implements KeyListener {
      */
     public AppliancesPanel() {
         initComponents();
-        initKeyListeners();
         startUpSettings();
     }
 
@@ -35,6 +40,26 @@ public class AppliancesPanel extends javax.swing.JPanel implements KeyListener {
     
     private void startUpSettings() {
         setFieldsEditable(false);
+        initKeyListeners();
+        initApplianceTable();
+    }
+    
+    private void initApplianceTable() {
+        tableAppliance.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tableAppliance.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+
+            @Override
+            public void valueChanged(ListSelectionEvent lse) {
+                try {
+                    selectedIndex = tableAppliance.getSelectedRow();
+                    if (selectedIndex >= 0) {
+                        setApplianceAsset(appliances.get(selectedIndex));
+                    }
+                } catch (Exception e) {
+                    UIValidator.log(e, AppliancesPanel.class);
+                }
+            }
+        });
     }
 
     /**
@@ -45,9 +70,11 @@ public class AppliancesPanel extends javax.swing.JPanel implements KeyListener {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
+        appliances = ObservableCollections.observableList(new LinkedList<Appliance>());
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblAppliance = new javax.swing.JTable();
+        tableAppliance = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
         comboApplianceType = new javax.swing.JComboBox();
         jLabel3 = new javax.swing.JLabel();
@@ -57,28 +84,15 @@ public class AppliancesPanel extends javax.swing.JPanel implements KeyListener {
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        tblAppliance.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
-            },
-            new String [] {
-                "Type", "Estimated Value"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane1.setViewportView(tblAppliance);
-        tblAppliance.getColumnModel().getColumn(0).setResizable(false);
-        tblAppliance.getColumnModel().getColumn(1).setResizable(false);
+        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, appliances, tableAppliance);
+        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${type}"));
+        columnBinding.setColumnName("Type");
+        columnBinding.setColumnClass(String.class);
+        columnBinding.setEditable(false);
+        bindingGroup.addBinding(jTableBinding);
+        jTableBinding.bind();
+        jScrollPane1.setViewportView(tableAppliance);
+        tableAppliance.getColumnModel().getColumn(0).setResizable(false);
 
         add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 5, 433, 90));
 
@@ -113,6 +127,8 @@ public class AppliancesPanel extends javax.swing.JPanel implements KeyListener {
 
         txtTotalEstValue.setFont(new java.awt.Font("Monospaced", 0, 9)); // NOI18N
         add(txtTotalEstValue, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 130, 140, -1));
+
+        bindingGroup.bind();
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtEstValueFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtEstValueFocusLost
@@ -148,17 +164,20 @@ public class AppliancesPanel extends javax.swing.JPanel implements KeyListener {
     }//GEN-LAST:event_comboApplianceTypeItemStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private java.util.List<Appliance> appliances;
     private javax.swing.JComboBox comboApplianceType;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tblAppliance;
+    private javax.swing.JTable tableAppliance;
     private javax.swing.JTextField txtEstValue;
     private javax.swing.JTextField txtTotalEstValue;
+    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
     private String type;
     private BigDecimal estimatedValue;
+    private int selectedIndex;
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -236,6 +255,14 @@ public class AppliancesPanel extends javax.swing.JPanel implements KeyListener {
         Object o = ApplianceAssetsController.getInstance().update("", type, estimatedValue);
         setApplianceAsset(o);
         return o != null;
+    }
+    
+    public void refreshTable(List<Appliance> a) {
+        appliances.clear();
+        appliances.addAll(a);
+        if(!appliances.isEmpty()) {
+            tableAppliance.setRowSelectionInterval(0, 0);
+        }
     }
 
 }

@@ -8,8 +8,11 @@ package ui.panel;
 import com.vg.scfc.financing.cis.ent.CharacterReference;
 import com.vg.scfc.financing.cis.ent.CreditRef;
 import com.vg.scfc.financing.cis.ent.Dependent;
+import com.vg.scfc.financing.cis.ent.PersonalInfo;
+import com.vg.scfc.financing.cis.ent.Sibling;
 import java.util.LinkedList;
 import org.jdesktop.observablecollections.ObservableCollections;
+import ui.listener.AddEditChangeListener;
 import ui.listener.BasicActionListener;
 import ui.validator.UIValidator;
 
@@ -48,6 +51,11 @@ public class MainPanel extends javax.swing.JPanel {
         initCoMakerSpousePersonalInfoAddEditListener();
         initCoMakerSpouseEmploymentAddEditListener();
         initCoMakerSpouseFamilyBackgroundAddEditListener();
+        initAddressAddEditChangeListener();
+        initSpouseAddressAddEditChangeListener();
+        initCoMakerAddressAddEditChangeListener();
+        initCoMakerSpouseAddressAddEditChangeListener();
+        initPurchaseOrderAddEditListener();
     }
 
     private void initApplicantPersonalInfo() {
@@ -197,6 +205,8 @@ public class MainPanel extends javax.swing.JPanel {
     }
 
     private void initSiblingAddEditListener() {
+        panelSibling.setTableSibling(tableSibling);
+        panelSibling.setSiblings(siblings);
         addEditSibling.setBasicActionListener(new BasicActionListener() {
 
             @Override
@@ -1056,7 +1066,7 @@ public class MainPanel extends javax.swing.JPanel {
             }
         });
     }
-    
+
     private void initCoMakerSpouseEmploymentAddEditListener() {
         addEditCoMakerSpouseEmployment.setBasicActionListener(new BasicActionListener() {
 
@@ -1104,7 +1114,7 @@ public class MainPanel extends javax.swing.JPanel {
             }
         });
     }
-    
+
     private void initCoMakerSpouseFamilyBackgroundAddEditListener() {
         addEditCoMakerSpouseFamilyBackground.setBasicActionListener(new BasicActionListener() {
 
@@ -1153,6 +1163,320 @@ public class MainPanel extends javax.swing.JPanel {
         });
     }
 
+    private void initAddressAddEditChangeListener() {
+        addEditChangeAddress.setButtonListener(new AddEditChangeListener() {
+
+            @Override
+            public void onAdd() {
+                panelAddress.setFieldsEditable(true);
+                panelAddress.resetToDefault();
+            }
+
+            @Override
+            public boolean onSaveAdd() {
+                boolean isSaved = panelAddress.saveAddress();
+                if (!isSaved) {
+                    UIValidator.promptErrorMessageOn("SAVE");
+                }
+                return isSaved;
+            }
+
+            @Override
+            public void onCancelAdd() {
+                panelAddress.setFieldsEditable(false);
+                // reset ui
+            }
+
+            @Override
+            public void onEdit() {
+                panelAddress.setFieldsEditable(true);
+            }
+
+            @Override
+            public boolean onSaveEdit() {
+                boolean isUpdated = panelAddress.updateAddress();
+                if (!isUpdated) {
+                    UIValidator.promptErrorMessageOn("EDIT");
+                }
+                return isUpdated;
+            }
+
+            @Override
+            public void onCancelEdit() {
+                panelAddress.setFieldsEditable(false);
+                // reset ui
+            }
+
+            @Override
+            public void onChange() {
+                panelAddress.setFieldsEditable(true);
+                panelAddress.resetToDefault();
+            }
+
+            @Override
+            public boolean onSaveChange() {
+                boolean isChanged = panelAddress.changeAddress();
+                if (!isChanged) {
+                    UIValidator.promptErrorMessageOn("SAVE");
+                }
+                return isChanged;
+            }
+
+            @Override
+            public void onCancelChange() {
+                panelAddress.setFieldsEditable(false);
+                // reset ui
+            }
+        });
+    }
+
+    private void initSpouseAddressAddEditChangeListener() {
+        addEditChangeSpouseAddress.setButtonListener(new AddEditChangeListener() {
+
+            @Override
+            public void onAdd() {
+                panelSpouseAddress.setFieldsEditable(true);
+                panelSpouseAddress.resetToDefault();
+            }
+
+            @Override
+            public boolean onSaveAdd() {
+                boolean isSaved = panelSpouseAddress.saveAddress();
+                if (!isSaved) {
+                    UIValidator.promptErrorMessageOn("SAVE");
+                }
+                return isSaved;
+            }
+
+            @Override
+            public void onCancelAdd() {
+                panelSpouseAddress.setFieldsEditable(false);
+                // reset ui
+            }
+
+            @Override
+            public void onEdit() {
+                panelSpouseAddress.setFieldsEditable(true);
+            }
+
+            @Override
+            public boolean onSaveEdit() {
+                boolean isUpdated = panelSpouseAddress.updateAddress();
+                if (!isUpdated) {
+                    UIValidator.promptErrorMessageOn("EDIT");
+                }
+                return isUpdated;
+            }
+
+            @Override
+            public void onCancelEdit() {
+                panelSpouseAddress.setFieldsEditable(false);
+                // reset ui
+            }
+
+            @Override
+            public void onChange() {
+                panelSpouseAddress.setFieldsEditable(true);
+                panelSpouseAddress.resetToDefault();
+            }
+
+            @Override
+            public boolean onSaveChange() {
+                boolean isChanged = panelSpouseAddress.changeAddress();
+                if (!isChanged) {
+                    UIValidator.promptErrorMessageOn("SAVE");
+                }
+                return isChanged;
+            }
+
+            @Override
+            public void onCancelChange() {
+                panelSpouseAddress.setFieldsEditable(false);
+                // reset ui
+            }
+        });
+    }
+
+    private void initCoMakerAddressAddEditChangeListener() {
+        addEditChangeCoMakerAddress.setButtonListener(new AddEditChangeListener() {
+
+            @Override
+            public void onAdd() {
+                panelCoMakerAddress.setFieldsEditable(true);
+                panelCoMakerAddress.resetToDefault();
+            }
+
+            @Override
+            public boolean onSaveAdd() {
+                boolean isSaved = panelCoMakerAddress.saveAddress();
+                if (!isSaved) {
+                    UIValidator.promptErrorMessageOn("SAVE");
+                }
+                return isSaved;
+            }
+
+            @Override
+            public void onCancelAdd() {
+                panelCoMakerAddress.setFieldsEditable(false);
+                // reset ui
+            }
+
+            @Override
+            public void onEdit() {
+                panelCoMakerAddress.setFieldsEditable(true);
+            }
+
+            @Override
+            public boolean onSaveEdit() {
+                boolean isUpdated = panelCoMakerAddress.updateAddress();
+                if (!isUpdated) {
+                    UIValidator.promptErrorMessageOn("EDIT");
+                }
+                return isUpdated;
+            }
+
+            @Override
+            public void onCancelEdit() {
+                panelCoMakerAddress.setFieldsEditable(false);
+                // reset ui
+            }
+
+            @Override
+            public void onChange() {
+                panelCoMakerAddress.setFieldsEditable(true);
+                panelCoMakerAddress.resetToDefault();
+            }
+
+            @Override
+            public boolean onSaveChange() {
+                boolean isChanged = panelCoMakerAddress.changeAddress();
+                if (!isChanged) {
+                    UIValidator.promptErrorMessageOn("SAVE");
+                }
+                return isChanged;
+            }
+
+            @Override
+            public void onCancelChange() {
+                panelCoMakerAddress.setFieldsEditable(false);
+                // reset ui
+            }
+        });
+    }
+    
+    private void initCoMakerSpouseAddressAddEditChangeListener() {
+        addEditChangeCoMakerSpouseAddress.setButtonListener(new AddEditChangeListener() {
+
+            @Override
+            public void onAdd() {
+                panelCoMakerSpouseAddress.setFieldsEditable(true);
+                panelCoMakerSpouseAddress.resetToDefault();
+            }
+
+            @Override
+            public boolean onSaveAdd() {
+                boolean isSaved = panelCoMakerSpouseAddress.saveAddress();
+                if (!isSaved) {
+                    UIValidator.promptErrorMessageOn("SAVE");
+                }
+                return isSaved;
+            }
+
+            @Override
+            public void onCancelAdd() {
+                panelCoMakerSpouseAddress.setFieldsEditable(false);
+                // reset ui
+            }
+
+            @Override
+            public void onEdit() {
+                panelCoMakerSpouseAddress.setFieldsEditable(true);
+            }
+
+            @Override
+            public boolean onSaveEdit() {
+                boolean isUpdated = panelCoMakerSpouseAddress.updateAddress();
+                if (!isUpdated) {
+                    UIValidator.promptErrorMessageOn("EDIT");
+                }
+                return isUpdated;
+            }
+
+            @Override
+            public void onCancelEdit() {
+                panelCoMakerSpouseAddress.setFieldsEditable(false);
+                // reset ui
+            }
+
+            @Override
+            public void onChange() {
+                panelCoMakerSpouseAddress.setFieldsEditable(true);
+                panelCoMakerSpouseAddress.resetToDefault();
+            }
+
+            @Override
+            public boolean onSaveChange() {
+                boolean isChanged = panelCoMakerSpouseAddress.changeAddress();
+                if (!isChanged) {
+                    UIValidator.promptErrorMessageOn("SAVE");
+                }
+                return isChanged;
+            }
+
+            @Override
+            public void onCancelChange() {
+                panelCoMakerSpouseAddress.setFieldsEditable(false);
+                // reset ui
+            }
+        });
+    }
+    
+    private void initPurchaseOrderAddEditListener() {
+        addEditPO.setBasicActionListener(new BasicActionListener() {
+
+            @Override
+            public void onAdd() {
+                panelPO.setFieldsEditable(true);
+                panelPO.resetToDefault();
+            }
+
+            @Override
+            public boolean onSaveAdd() {
+                boolean isSaved = panelPO.savePurchaseOrder();
+                if(!isSaved) {
+                    UIValidator.promptErrorMessageOn("SAVE");
+                }
+                return isSaved;
+            }
+
+            @Override
+            public void onCancelAdd() {
+                panelPO.setFieldsEditable(false);
+                // TODO, reset ui
+            }
+
+            @Override
+            public void onEdit() {
+                panelPO.setFieldsEditable(true);
+            }
+
+            @Override
+            public boolean onSaveEdit() {
+                boolean isUpdated = panelPO.updatePurchaseOrder();
+                if(!isUpdated) {
+                    UIValidator.promptErrorMessageOn("EDIT");
+                }
+                return isUpdated;
+            }
+
+            @Override
+            public void onCancelEdit() {
+                panelPO.setFieldsEditable(false);
+                // TODO, reset ui
+            }
+        });
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -1166,6 +1490,8 @@ public class MainPanel extends javax.swing.JPanel {
         creditReferences = ObservableCollections.observableList(new LinkedList<CreditRef>());
         dependents = ObservableCollections.observableList(new LinkedList<Dependent>());
         characterReferences = ObservableCollections.observableList(new LinkedList<CharacterReference>());
+        siblings = ObservableCollections.observableList(new LinkedList<Sibling>());
+        comakers = ObservableCollections.observableList(new LinkedList<PersonalInfo>());
         tabMain = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         panelPersonalInfo = new ui.reusable.PersonalInformationPanel();
@@ -1179,7 +1505,7 @@ public class MainPanel extends javax.swing.JPanel {
         jPanel4 = new javax.swing.JPanel();
         panelSibling = new ui.reusable.SiblingsPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblVehicle = new javax.swing.JTable();
+        tableSibling = new javax.swing.JTable();
         addEditSibling = new ui.reusable.AddEditButtonPanel();
         jPanel5 = new javax.swing.JPanel();
         panelCharacterReference = new ui.reusable.CharacterReferenceDependentPanel();
@@ -1217,8 +1543,11 @@ public class MainPanel extends javax.swing.JPanel {
         panelMachinery = new ui.reusable.MachineryPanel();
         addEditMachinery = new ui.reusable.AddEditButtonPanel();
         jPanel27 = new javax.swing.JPanel();
-        addressPanel1 = new ui.reusable.AddressPanel();
-        addEditChangeButtonPanel1 = new ui.reusable.AddEditChangeButtonPanel();
+        panelAddress = new ui.reusable.AddressPanel();
+        addEditChangeAddress = new ui.reusable.AddEditChangeButtonPanel();
+        tabPO = new javax.swing.JPanel();
+        panelPO = new ui.reusable.PurchaseOrderPanel();
+        addEditPO = new ui.reusable.AddEditButtonPanel();
         addEditPersonalInfo = new ui.reusable.AddEditButtonPanel();
         jPanel15 = new javax.swing.JPanel();
         panelSpousePersonalInfo = new ui.reusable.PersonalInformationPanel();
@@ -1230,7 +1559,8 @@ public class MainPanel extends javax.swing.JPanel {
         panelSpouseFamilyBackground = new ui.reusable.FamilyBackgroundPanel();
         addEditSpouseFamilyBackground = new ui.reusable.AddEditButtonPanel();
         jPanel28 = new javax.swing.JPanel();
-        addressPanel2 = new ui.reusable.AddressPanel();
+        panelSpouseAddress = new ui.reusable.AddressPanel();
+        addEditChangeSpouseAddress = new ui.reusable.AddEditChangeButtonPanel();
         addEditSpousePersonalInfo = new ui.reusable.AddEditButtonPanel();
         jPanel18 = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
@@ -1259,9 +1589,11 @@ public class MainPanel extends javax.swing.JPanel {
         panelCoMakerSpouseFamilyBackground = new ui.reusable.FamilyBackgroundPanel();
         addEditCoMakerSpouseFamilyBackground = new ui.reusable.AddEditButtonPanel();
         jPanel30 = new javax.swing.JPanel();
-        addressPanel4 = new ui.reusable.AddressPanel();
+        panelCoMakerSpouseAddress = new ui.reusable.AddressPanel();
+        addEditChangeCoMakerSpouseAddress = new ui.reusable.AddEditChangeButtonPanel();
         jPanel29 = new javax.swing.JPanel();
-        addressPanel3 = new ui.reusable.AddressPanel();
+        panelCoMakerAddress = new ui.reusable.AddressPanel();
+        addEditChangeCoMakerAddress = new ui.reusable.AddEditChangeButtonPanel();
         addEditCoMakerPersonalInfo = new ui.reusable.AddEditButtonPanel();
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -1284,28 +1616,22 @@ public class MainPanel extends javax.swing.JPanel {
         jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
         jPanel4.add(panelSibling, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 100, -1, -1));
 
-        tblVehicle.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Type/Model", "Years Used", "Use", "Estimated Value"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false
-            };
+        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, siblings, tableSibling);
+        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${siblingName}"));
+        columnBinding.setColumnName("Name");
+        columnBinding.setColumnClass(String.class);
+        columnBinding.setEditable(false);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${siblingContactNo}"));
+        columnBinding.setColumnName("Contact #");
+        columnBinding.setColumnClass(String.class);
+        columnBinding.setEditable(false);
+        bindingGroup.addBinding(jTableBinding);
+        jTableBinding.bind();
+        jScrollPane1.setViewportView(tableSibling);
+        tableSibling.getColumnModel().getColumn(1).setPreferredWidth(150);
+        tableSibling.getColumnModel().getColumn(1).setMaxWidth(150);
 
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane1.setViewportView(tblVehicle);
-
-        jPanel4.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 5, 600, 90));
+        jPanel4.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 5, 390, 90));
         jPanel4.add(addEditSibling, new org.netbeans.lib.awtextra.AbsoluteConstraints(92, 185, -1, -1));
 
         jTabbedPane1.addTab("Siblings", jPanel4);
@@ -1316,8 +1642,8 @@ public class MainPanel extends javax.swing.JPanel {
         tableCharacterRef.setColumnSelectionAllowed(true);
         tableCharacterRef.getTableHeader().setReorderingAllowed(false);
 
-        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, characterReferences, tableCharacterRef);
-        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${charRefName}"));
+        jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, characterReferences, tableCharacterRef);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${charRefName}"));
         columnBinding.setColumnName("Name");
         columnBinding.setColumnClass(String.class);
         columnBinding.setEditable(false);
@@ -1465,10 +1791,16 @@ public class MainPanel extends javax.swing.JPanel {
         jTabbedPane1.addTab("Assets", jPanel10);
 
         jPanel27.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        jPanel27.add(addressPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(5, 5, -1, -1));
-        jPanel27.add(addEditChangeButtonPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 230, -1, -1));
+        jPanel27.add(panelAddress, new org.netbeans.lib.awtextra.AbsoluteConstraints(5, 5, -1, -1));
+        jPanel27.add(addEditChangeAddress, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 230, -1, -1));
 
         jTabbedPane1.addTab("Address", jPanel27);
+
+        tabPO.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        tabPO.add(panelPO, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 15, -1, -1));
+        tabPO.add(addEditPO, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 120, -1, -1));
+
+        jTabbedPane1.addTab("Purchase Order", tabPO);
 
         jPanel1.add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 235, 1020, 330));
         jPanel1.add(addEditPersonalInfo, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 190, -1, -1));
@@ -1491,7 +1823,8 @@ public class MainPanel extends javax.swing.JPanel {
         jTabbedPane3.addTab("Family", jPanel17);
 
         jPanel28.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        jPanel28.add(addressPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(5, 5, -1, -1));
+        jPanel28.add(panelSpouseAddress, new org.netbeans.lib.awtextra.AbsoluteConstraints(5, 5, -1, -1));
+        jPanel28.add(addEditChangeSpouseAddress, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 230, -1, -1));
 
         jTabbedPane3.addTab("Address", jPanel28);
 
@@ -1502,25 +1835,21 @@ public class MainPanel extends javax.swing.JPanel {
 
         jPanel18.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        tblVehicle4.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Type/Model", "Years Used", "Use", "Estimated Value"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
+        jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, comakers, tblVehicle4);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${lastName}"));
+        columnBinding.setColumnName("Last Name");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${firstName}"));
+        columnBinding.setColumnName("First Name");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${middleName}"));
+        columnBinding.setColumnName("Middle Name");
+        columnBinding.setColumnClass(String.class);
+        columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${contactNo}"));
+        columnBinding.setColumnName("Contact No");
+        columnBinding.setColumnClass(String.class);
+        bindingGroup.addBinding(jTableBinding);
+        jTableBinding.bind();
         jScrollPane5.setViewportView(tblVehicle4);
 
         jPanel18.add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 5, 1000, 70));
@@ -1571,7 +1900,8 @@ public class MainPanel extends javax.swing.JPanel {
         jTabbedPane5.addTab("Family", jPanel26);
 
         jPanel30.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        jPanel30.add(addressPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(5, 5, -1, -1));
+        jPanel30.add(panelCoMakerSpouseAddress, new org.netbeans.lib.awtextra.AbsoluteConstraints(5, 5, -1, -1));
+        jPanel30.add(addEditChangeCoMakerSpouseAddress, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 230, -1, -1));
 
         jTabbedPane5.addTab("Address", jPanel30);
 
@@ -1580,7 +1910,8 @@ public class MainPanel extends javax.swing.JPanel {
         jTabbedPane4.addTab("Spouse Information", jPanel23);
 
         jPanel29.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        jPanel29.add(addressPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(5, 5, -1, -1));
+        jPanel29.add(panelCoMakerAddress, new org.netbeans.lib.awtextra.AbsoluteConstraints(5, 5, -1, -1));
+        jPanel29.add(addEditChangeCoMakerAddress, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 230, -1, -1));
 
         jTabbedPane4.addTab("Address", jPanel29);
 
@@ -1596,7 +1927,10 @@ public class MainPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private ui.reusable.AddEditButtonPanel addEditAppliance;
-    private ui.reusable.AddEditChangeButtonPanel addEditChangeButtonPanel1;
+    private ui.reusable.AddEditChangeButtonPanel addEditChangeAddress;
+    private ui.reusable.AddEditChangeButtonPanel addEditChangeCoMakerAddress;
+    private ui.reusable.AddEditChangeButtonPanel addEditChangeCoMakerSpouseAddress;
+    private ui.reusable.AddEditChangeButtonPanel addEditChangeSpouseAddress;
     private ui.reusable.AddEditButtonPanel addEditCharacterReference;
     private ui.reusable.AddEditButtonPanel addEditCoMakerEmployment;
     private ui.reusable.AddEditButtonPanel addEditCoMakerFamilyBackground;
@@ -1612,6 +1946,7 @@ public class MainPanel extends javax.swing.JPanel {
     private ui.reusable.AddEditButtonPanel addEditFamily;
     private ui.reusable.AddEditButtonPanel addEditLandAssets;
     private ui.reusable.AddEditButtonPanel addEditMachinery;
+    private ui.reusable.AddEditButtonPanel addEditPO;
     private ui.reusable.AddEditButtonPanel addEditPersonalInfo;
     private ui.reusable.AddEditButtonPanel addEditSibling;
     private ui.reusable.AddEditButtonPanel addEditSourceOfInc;
@@ -1619,11 +1954,8 @@ public class MainPanel extends javax.swing.JPanel {
     private ui.reusable.AddEditButtonPanel addEditSpouseFamilyBackground;
     private ui.reusable.AddEditButtonPanel addEditSpousePersonalInfo;
     private ui.reusable.AddEditButtonPanel addEditVehicle;
-    private ui.reusable.AddressPanel addressPanel1;
-    private ui.reusable.AddressPanel addressPanel2;
-    private ui.reusable.AddressPanel addressPanel3;
-    private ui.reusable.AddressPanel addressPanel4;
     private java.util.List<CharacterReference> characterReferences;
+    private java.util.List<PersonalInfo> comakers;
     private java.util.List<CreditRef> creditReferences;
     private java.util.List<Dependent> dependents;
     private javax.swing.JPanel jPanel1;
@@ -1666,12 +1998,15 @@ public class MainPanel extends javax.swing.JPanel {
     private javax.swing.JTabbedPane jTabbedPane3;
     private javax.swing.JTabbedPane jTabbedPane4;
     private javax.swing.JTabbedPane jTabbedPane5;
+    private ui.reusable.AddressPanel panelAddress;
     private ui.reusable.AppliancesPanel panelAppliance;
     private ui.reusable.CharacterReferenceDependentPanel panelCharacterReference;
+    private ui.reusable.AddressPanel panelCoMakerAddress;
     private ui.reusable.EmploymentDataPanel panelCoMakerEmploymentData;
     private ui.reusable.FamilyBackgroundPanel panelCoMakerFamilyBackground;
     private ui.reusable.PersonalInformationPanel panelCoMakerPersonalInformation;
     private ui.reusable.SourceOfIncomePanel panelCoMakerSourceOfIncome;
+    private ui.reusable.AddressPanel panelCoMakerSpouseAddress;
     private ui.reusable.EmploymentDataPanel panelCoMakerSpouseEmploymentData;
     private ui.reusable.FamilyBackgroundPanel panelCoMakerSpouseFamilyBackground;
     private ui.reusable.PersonalInformationPanel panelCoMakerSpousePersonalInformation;
@@ -1682,18 +2017,22 @@ public class MainPanel extends javax.swing.JPanel {
     private ui.reusable.FamilyBackgroundPanel panelFamilyBackground;
     private ui.reusable.LandPanel panelLandAssets;
     private ui.reusable.MachineryPanel panelMachinery;
+    private ui.reusable.PurchaseOrderPanel panelPO;
     private ui.reusable.PersonalInformationPanel panelPersonalInfo;
     private ui.reusable.SiblingsPanel panelSibling;
     private ui.reusable.SourceOfIncomePanel panelSourceOfIncome;
+    private ui.reusable.AddressPanel panelSpouseAddress;
     private ui.reusable.EmploymentDataPanel panelSpouseEmployment;
     private ui.reusable.FamilyBackgroundPanel panelSpouseFamilyBackground;
     private ui.reusable.PersonalInformationPanel panelSpousePersonalInfo;
     private ui.reusable.VehiclePanel panelVehicle;
+    private java.util.List<Sibling> siblings;
     private javax.swing.JTabbedPane tabMain;
+    private javax.swing.JPanel tabPO;
     private javax.swing.JTable tableCharacterRef;
     private javax.swing.JTable tableCreditReference;
     private javax.swing.JTable tableDependent;
-    private javax.swing.JTable tblVehicle;
+    private javax.swing.JTable tableSibling;
     private javax.swing.JTable tblVehicle4;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables

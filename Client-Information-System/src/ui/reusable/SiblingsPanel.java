@@ -8,6 +8,11 @@ package ui.reusable;
 import com.vg.scfc.financing.cis.ent.Sibling;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.List;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import ui.controller.SiblingController;
 import ui.validator.UIValidator;
 
@@ -22,12 +27,33 @@ public class SiblingsPanel extends javax.swing.JPanel implements KeyListener {
      */
     public SiblingsPanel() {
         initComponents();
-        initTextBoxesListener();
         startUpSettings();
     }
-    
+
+    private void initTableSibling() {
+        if (tableSibling != null) {
+            tableSibling.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            tableSibling.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+
+                @Override
+                public void valueChanged(ListSelectionEvent lse) {
+                    try {
+                        selectedIndex = tableSibling.getSelectedRow();
+                        if (selectedIndex >= 0) {
+                            setSibling(siblings.get(selectedIndex));
+                        }
+                    } catch (Exception e) {
+                        UIValidator.log(e, SiblingsPanel.class);
+                    }
+                }
+            });
+        }
+    }
+
     private void startUpSettings() {
         setFieldsEditable(false);
+        initTextBoxesListener();
+        initTableSibling();
     }
 
     /**
@@ -117,7 +143,18 @@ public class SiblingsPanel extends javax.swing.JPanel implements KeyListener {
     private String name;
     private String address;
     private String contact;
-    
+    private JTable tableSibling;
+    private int selectedIndex;
+    private List<Sibling> siblings;
+
+    public void setTableSibling(JTable tableSibling) {
+        this.tableSibling = tableSibling;
+    }
+
+    public void setSiblings(List<Sibling> siblings) {
+        this.siblings = siblings;
+    }
+
     @Override
     public void keyTyped(KeyEvent e) {
     }
@@ -151,15 +188,15 @@ public class SiblingsPanel extends javax.swing.JPanel implements KeyListener {
         txtSiblingAddress.setEditable(value);
         txtSiblingContact.setEditable(value);
     }
-    
+
     public void resetToDefault() {
         txtSiblingName.setText("");
         txtSiblingAddress.setText("");
         txtSiblingContact.setText("");
     }
-    
+
     public void setSibling(Object o) {
-        if(o == null) {
+        if (o == null) {
             resetToDefault();
         } else {
             Sibling s = (Sibling) o;
@@ -168,16 +205,24 @@ public class SiblingsPanel extends javax.swing.JPanel implements KeyListener {
             txtSiblingContact.setText(s.getSiblingContactNo());
         }
     }
-    
+
     public boolean saveSibling() {
         Object o = SiblingController.getInstance().createNew(name, address, contact);
         setSibling(o);
         return o != null;
     }
-    
+
     public boolean updateSibling() {
         Object o = SiblingController.getInstance().update("", name, address, contact);
         setSibling(o);
         return o != null;
+    }
+
+    public void refreshTable(List<Sibling> s) {
+        siblings.clear();
+        siblings.addAll(s);
+        if (!siblings.isEmpty()) {
+            tableSibling.setRowSelectionInterval(0, 0);
+        }
     }
 }

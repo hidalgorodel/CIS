@@ -11,6 +11,6 @@ package ui.frames;
  */
 public class TestClass {
     public static void main(String[] args) {
-        new MainFrame().setVisible(true);
+        new ApplicantForm().setVisible(true);
     }
 }

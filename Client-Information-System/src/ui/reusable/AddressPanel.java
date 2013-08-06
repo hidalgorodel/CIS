@@ -480,6 +480,10 @@ public class AddressPanel extends javax.swing.JPanel implements KeyListener {
     public boolean updateAddress() {
         return true;
     }
+    
+    public boolean changeAddress() {
+        return true;
+    }
 
     public void refreshTable(List<Address> a) {
         addresses.clear();
