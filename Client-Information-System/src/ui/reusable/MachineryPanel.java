@@ -5,23 +5,57 @@
  */
 package ui.reusable;
 
+import com.vg.scfc.financing.cis.ent.Machinery;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.math.BigDecimal;
+import java.util.LinkedList;
+import java.util.List;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import org.jdesktop.observablecollections.ObservableCollections;
+import ui.controller.MachineryAssetsController;
+import ui.validator.UIValidator;
 
 /**
  *
  * @author rodel
  */
-public class MachineryPanel extends javax.swing.JPanel implements KeyListener{
+public class MachineryPanel extends javax.swing.JPanel implements KeyListener {
 
     /**
      * Creates new form MachineryPanel
      */
     public MachineryPanel() {
         initComponents();
-        initKeyListeners();
+        startUpSettings();
     }
     
+    private void startUpSettings() {
+        setFieldsEditable(false);
+        initKeyListeners();
+        initMachineryTable();
+    }
+    
+    private void initMachineryTable() {
+        tableMachinery.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tableMachinery.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+
+            @Override
+            public void valueChanged(ListSelectionEvent lse) {
+                try {
+                    selectedIndex = tableMachinery.getSelectedRow();
+                    if (selectedIndex >= 0) {
+                        setMachinery(machineries.get(selectedIndex));
+                    }
+                } catch (Exception e) {
+                    // TODO, log exception
+                }
+            }
+        });
+    }
+
     private void initKeyListeners() {
         txtMachineType.addKeyListener(this);
         txtMachineQty.addKeyListener(this);
@@ -36,9 +70,11 @@ public class MachineryPanel extends javax.swing.JPanel implements KeyListener{
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
+        machineries = ObservableCollections.observableList(new LinkedList<Machinery>());
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tableMachinery = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         txtMachineType = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
@@ -51,29 +87,19 @@ public class MachineryPanel extends javax.swing.JPanel implements KeyListener{
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
-            },
-            new String [] {
-                "Type of Unit", "Qty", "Estimated Value"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false
-            };
+        tableMachinery.setColumnSelectionAllowed(true);
+        tableMachinery.getTableHeader().setReorderingAllowed(false);
 
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane1.setViewportView(jTable1);
-        jTable1.getColumnModel().getColumn(0).setResizable(false);
-        jTable1.getColumnModel().getColumn(1).setResizable(false);
-        jTable1.getColumnModel().getColumn(2).setResizable(false);
+        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, machineries, tableMachinery);
+        org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${type}"));
+        columnBinding.setColumnName("Type of Unit");
+        columnBinding.setColumnClass(String.class);
+        columnBinding.setEditable(false);
+        bindingGroup.addBinding(jTableBinding);
+        jTableBinding.bind();
+        jScrollPane1.setViewportView(tableMachinery);
+        tableMachinery.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tableMachinery.getColumnModel().getColumn(0).setResizable(false);
 
         add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 5, 380, 100));
 
@@ -82,6 +108,11 @@ public class MachineryPanel extends javax.swing.JPanel implements KeyListener{
         add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 120, -1, -1));
 
         txtMachineType.setFont(new java.awt.Font("Monospaced", 0, 9)); // NOI18N
+        txtMachineType.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtMachineTypeFocusLost(evt);
+            }
+        });
         add(txtMachineType, new org.netbeans.lib.awtextra.AbsoluteConstraints(93, 115, 170, -1));
 
         jLabel2.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
@@ -89,6 +120,11 @@ public class MachineryPanel extends javax.swing.JPanel implements KeyListener{
         add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 145, -1, -1));
 
         txtMachineQty.setFont(new java.awt.Font("Monospaced", 0, 9)); // NOI18N
+        txtMachineQty.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtMachineQtyFocusLost(evt);
+            }
+        });
         add(txtMachineQty, new org.netbeans.lib.awtextra.AbsoluteConstraints(93, 140, 80, -1));
 
         jLabel3.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
@@ -96,8 +132,14 @@ public class MachineryPanel extends javax.swing.JPanel implements KeyListener{
         add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 170, -1, -1));
 
         txtMachineEstValue.setFont(new java.awt.Font("Monospaced", 0, 9)); // NOI18N
+        txtMachineEstValue.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtMachineEstValueFocusLost(evt);
+            }
+        });
         add(txtMachineEstValue, new org.netbeans.lib.awtextra.AbsoluteConstraints(93, 165, 170, -1));
 
+        txtTotalEstValue.setEditable(false);
         txtTotalEstValue.setFont(new java.awt.Font("Monospaced", 0, 9)); // NOI18N
         add(txtTotalEstValue, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 200, 140, -1));
 
@@ -105,7 +147,21 @@ public class MachineryPanel extends javax.swing.JPanel implements KeyListener{
         jLabel4.setText("Total Est. of value");
         add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 205, -1, -1));
         add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 190, 400, -1));
+
+        bindingGroup.bind();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void txtMachineTypeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMachineTypeFocusLost
+        type = UIValidator.validate(txtMachineType);
+    }//GEN-LAST:event_txtMachineTypeFocusLost
+
+    private void txtMachineQtyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMachineQtyFocusLost
+        qty = Integer.parseInt(UIValidator.isNumeric(txtMachineQty));
+    }//GEN-LAST:event_txtMachineQtyFocusLost
+
+    private void txtMachineEstValueFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMachineEstValueFocusLost
+        estimatedValue = new BigDecimal(UIValidator.isNumeric(txtMachineEstValue));
+    }//GEN-LAST:event_txtMachineEstValueFocusLost
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
@@ -114,12 +170,18 @@ public class MachineryPanel extends javax.swing.JPanel implements KeyListener{
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable jTable1;
+    private java.util.List<Machinery> machineries;
+    private javax.swing.JTable tableMachinery;
     private javax.swing.JTextField txtMachineEstValue;
     private javax.swing.JTextField txtMachineQty;
     private javax.swing.JTextField txtMachineType;
     private javax.swing.JTextField txtTotalEstValue;
+    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
+    private String type;
+    private int qty;
+    private BigDecimal estimatedValue;
+    private int selectedIndex;
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -131,21 +193,64 @@ public class MachineryPanel extends javax.swing.JPanel implements KeyListener{
 
     @Override
     public void keyReleased(KeyEvent e) {
-        switch(e.getKeyCode()) {
+        switch (e.getKeyCode()) {
             case KeyEvent.VK_ENTER:
-                if(txtMachineType.isFocusOwner()) {
-                    txtMachineQty.requestFocus();
-                } else if(txtMachineQty.isFocusOwner()) {
-                    txtMachineEstValue.requestFocus();
-                }
+                if (txtMachineType.isFocusOwner()) {
+                txtMachineQty.requestFocus();
+            } else if (txtMachineQty.isFocusOwner()) {
+                txtMachineEstValue.requestFocus();
+            }
                 break;
             case KeyEvent.VK_UP:
-                if(txtMachineEstValue.isFocusOwner()) {
-                    txtMachineQty.requestFocus();
-                } else if(txtMachineQty.isFocusOwner()) {
-                    txtMachineType.requestFocus();
-                }
+                if (txtMachineEstValue.isFocusOwner()) {
+                txtMachineQty.requestFocus();
+            } else if (txtMachineQty.isFocusOwner()) {
+                txtMachineType.requestFocus();
+            }
                 break;
+        }
+    }
+
+    public void setFieldsEditable(boolean value) {
+        txtMachineType.setEditable(value);
+        txtMachineQty.setEditable(value);
+        txtMachineEstValue.setEditable(value);
+    }
+
+    public void resetToDefault() {
+        txtMachineType.setText("");
+        txtMachineQty.setText("");
+        txtMachineEstValue.setText("");
+    }
+
+    public void setMachinery(Object o) {
+        if (o == null) {
+            resetToDefault();
+        } else {
+            Machinery m = (Machinery) o;
+            txtMachineType.setText(m.getType());
+            txtMachineQty.setText(m.getQuantity() + "");
+            txtMachineEstValue.setText(m.getAmount() + "");
+        }
+    }
+    
+    public boolean saveMachinery() {
+        Object o = MachineryAssetsController.getInstance().createNew(type, qty, estimatedValue);
+        setMachinery(o);
+        return o != null;
+    }
+    
+    public boolean updateMachinery() {
+        Object o = MachineryAssetsController.getInstance().update("", type, qty, estimatedValue);
+        setMachinery(o);
+        return o != null;
+    }
+    
+    public void refreshTable(List<Machinery> m) {
+        machineries.clear();
+        machineries.addAll(m);
+        if(!machineries.isEmpty()) {
+            tableMachinery.setRowSelectionInterval(0, 0);
         }
     }
 }

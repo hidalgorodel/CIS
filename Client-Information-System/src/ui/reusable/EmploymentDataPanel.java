@@ -5,13 +5,11 @@
  */
 package ui.reusable;
 
+import com.vg.scfc.financing.cis.ent.Employment;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 import ui.controller.EmploymentCotroller;
-import ui.messages.ErrorMessage;
-import ui.validator.InputValidator;
+import ui.validator.UIValidator;
 
 /**
  *
@@ -25,6 +23,11 @@ public class EmploymentDataPanel extends javax.swing.JPanel implements KeyListen
     public EmploymentDataPanel() {
         initComponents();
         initUIListener();
+        startUpSettings();
+    }
+    
+    private void startUpSettings() {
+        setFieldsEditable(false);
     }
 
     /**
@@ -60,6 +63,8 @@ public class EmploymentDataPanel extends javax.swing.JPanel implements KeyListen
         txtEmployerContact = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         txtEmployerBusinessNature = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        txtYearInService = new javax.swing.JTextField();
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -81,7 +86,7 @@ public class EmploymentDataPanel extends javax.swing.JPanel implements KeyListen
                 txtCompanyEmployerFocusLost(evt);
             }
         });
-        add(txtCompanyEmployer, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 55, 255, -1));
+        add(txtCompanyEmployer, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 55, 320, -1));
 
         jLabel4.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
         jLabel4.setText("Position/Department");
@@ -93,7 +98,7 @@ public class EmploymentDataPanel extends javax.swing.JPanel implements KeyListen
                 txtPositionDepartmentFocusLost(evt);
             }
         });
-        add(txtPositionDepartment, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 30, 255, -1));
+        add(txtPositionDepartment, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 30, 320, -1));
 
         jLabel5.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
         jLabel5.setText("Company/Employer");
@@ -105,7 +110,7 @@ public class EmploymentDataPanel extends javax.swing.JPanel implements KeyListen
                 txtEmployerAddressFocusLost(evt);
             }
         });
-        add(txtEmployerAddress, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 80, 255, -1));
+        add(txtEmployerAddress, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 80, 320, -1));
 
         jLabel6.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
         jLabel6.setText("Contact #");
@@ -129,35 +134,44 @@ public class EmploymentDataPanel extends javax.swing.JPanel implements KeyListen
                 txtEmployerBusinessNatureFocusLost(evt);
             }
         });
-        add(txtEmployerBusinessNature, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 131, 255, -1));
+        add(txtEmployerBusinessNature, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 131, 320, -1));
+
+        jLabel8.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
+        jLabel8.setText("Years in Service");
+        add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(295, 110, -1, -1));
+
+        txtYearInService.setFont(new java.awt.Font("Monospaced", 0, 9)); // NOI18N
+        txtYearInService.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtYearInServiceFocusLost(evt);
+            }
+        });
+        add(txtYearInService, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 105, 70, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtPositionDepartmentFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPositionDepartmentFocusLost
-        positionDept = validate(txtPositionDepartment);
+        positionDept = UIValidator.validate(txtPositionDepartment);
     }//GEN-LAST:event_txtPositionDepartmentFocusLost
 
     private void txtCompanyEmployerFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCompanyEmployerFocusLost
-        companyEmployer = validate(txtCompanyEmployer);
+        companyEmployer = UIValidator.validate(txtCompanyEmployer);
     }//GEN-LAST:event_txtCompanyEmployerFocusLost
 
     private void txtEmployerAddressFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtEmployerAddressFocusLost
-        address = validate(txtEmployerAddress);
+        address = UIValidator.validate(txtEmployerAddress);
     }//GEN-LAST:event_txtEmployerAddressFocusLost
 
     private void txtEmployerContactFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtEmployerContactFocusLost
-       String contactTemp = validate(txtEmployerContact);
-       if(InputValidator.getInstance().isNumeric(contactTemp)) {
-           contactNo = contactTemp;
-       } else {
-           JOptionPane.showMessageDialog(null, ErrorMessage.NON_NUMERIC, ErrorMessage.ERROR_MESSAGE_TITLE, JOptionPane.WARNING_MESSAGE);
-           txtEmployerContact.requestFocus();
-           txtEmployerContact.setText("");
-       }
+        contactNo = UIValidator.isNumeric(txtEmployerContact);
     }//GEN-LAST:event_txtEmployerContactFocusLost
 
     private void txtEmployerBusinessNatureFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtEmployerBusinessNatureFocusLost
-        natureOfBuss = validate(txtEmployerBusinessNature);
+        natureOfBuss = UIValidator.validate(txtEmployerBusinessNature);
     }//GEN-LAST:event_txtEmployerBusinessNatureFocusLost
+
+    private void txtYearInServiceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtYearInServiceFocusLost
+        yearInService = Integer.parseInt(UIValidator.isNumeric(txtYearInService));
+    }//GEN-LAST:event_txtYearInServiceFocusLost
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox comboEmploymentStatus;
@@ -167,12 +181,15 @@ public class EmploymentDataPanel extends javax.swing.JPanel implements KeyListen
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JTextField txtCompanyEmployer;
     private javax.swing.JTextField txtEmployerAddress;
     private javax.swing.JTextField txtEmployerBusinessNature;
     private javax.swing.JTextField txtEmployerContact;
     private javax.swing.JTextField txtPositionDepartment;
+    private javax.swing.JTextField txtYearInService;
     // End of variables declaration//GEN-END:variables
+    private String status;
     private String positionDept;
     private String companyEmployer;
     private String address;
@@ -201,11 +218,15 @@ public class EmploymentDataPanel extends javax.swing.JPanel implements KeyListen
             } else if (txtEmployerAddress.isFocusOwner()) {
                 txtEmployerContact.requestFocus();
             } else if (txtEmployerContact.isFocusOwner()) {
+                txtYearInService.requestFocus();
+            } else if (txtYearInService.isFocusOwner()) {
                 txtEmployerBusinessNature.requestFocus();
             }
                 break;
             case KeyEvent.VK_UP:
                 if (txtEmployerBusinessNature.isFocusOwner()) {
+                txtYearInService.requestFocus();
+            } else if (txtYearInService.isFocusOwner()) {
                 txtEmployerContact.requestFocus();
             } else if (txtEmployerContact.isFocusOwner()) {
                 txtEmployerAddress.requestFocus();
@@ -220,31 +241,52 @@ public class EmploymentDataPanel extends javax.swing.JPanel implements KeyListen
         }
     }
 
-    private String validate(JTextField field) {
-        String fieldValue = field.getText();
-        if (InputValidator.getInstance().isEmpty(fieldValue)) {
-            JOptionPane.showMessageDialog(null, ErrorMessage.EMPTY_FIELD, ErrorMessage.ERROR_MESSAGE_TITLE, JOptionPane.WARNING_MESSAGE);
-            field.requestFocus();
-            return "";
-        } else {
-            return InputValidator.getInstance().newLineRemover(fieldValue).toUpperCase();
-        }
-    }
-    
     public boolean saveEmploymentData() {
-        Object o = EmploymentCotroller.getInstance().createNewEmploymentRecord(address, positionDept, companyEmployer, address, contactNo, natureOfBuss, yearInService);
+        Object o = EmploymentCotroller.getInstance().createNew(address, positionDept, companyEmployer, address, contactNo, natureOfBuss, yearInService);
         setEmploymentData(o);
         return o != null;
     }
-    
-    private void setEmploymentData(Object o) {
-        if(o == null) {
+
+    public boolean updateEmploymentData() {
+        Object o = EmploymentCotroller.getInstance().update("", status, positionDept, companyEmployer, address, contactNo, natureOfBuss, yearInService);
+        setEmploymentData(o);
+        return o != null;
+    }
+
+    public void setEmploymentData(Object o) {
+        if (o == null) {
             resetToDefault();
         } else {
-            
+            Employment e = (Employment) o;
+            switch (e.getEmpStatus()) {
+                case "REGULAR":
+                    comboEmploymentStatus.setSelectedIndex(0);
+                    break;
+                case "SELF-EMPLOYED":
+                    comboEmploymentStatus.setSelectedIndex(1);
+                    break;
+                case "PROJECT-HIRED":
+                    comboEmploymentStatus.setSelectedIndex(2);
+                    break;
+                case "CONTRACTUAL":
+                    comboEmploymentStatus.setSelectedIndex(3);
+                    break;
+                case "PROBITIONARY":
+                    comboEmploymentStatus.setSelectedIndex(0);
+                    break;
+                case "OTHERS":
+                    comboEmploymentStatus.setSelectedIndex(0);
+                    break;
+            }
+            txtPositionDepartment.setText(e.getEmpPosition());
+            txtCompanyEmployer.setText(e.getEmpCompany());
+            txtEmployerAddress.setText(e.getEmpAddress());
+            txtEmployerContact.setText(e.getEmpContactNo());
+            txtEmployerBusinessNature.setText(e.getEmpNature());
+//            txtYearInService.setText(e.getEmpYearsInService());
         }
     }
-    
+
     public void setFieldsEditable(boolean value) {
         comboEmploymentStatus.setEnabled(value);
         txtPositionDepartment.setEditable(value);
@@ -252,8 +294,9 @@ public class EmploymentDataPanel extends javax.swing.JPanel implements KeyListen
         txtEmployerAddress.setEditable(value);
         txtEmployerContact.setEditable(value);
         txtEmployerBusinessNature.setEditable(value);
+        txtYearInService.setEditable(value);
     }
-    
+
     public void resetToDefault() {
         comboEmploymentStatus.setSelectedIndex(0);
         txtPositionDepartment.setText("");
@@ -261,7 +304,8 @@ public class EmploymentDataPanel extends javax.swing.JPanel implements KeyListen
         txtEmployerAddress.setText("");
         txtEmployerContact.setText("");
         txtEmployerBusinessNature.setText("");
-        
+        txtYearInService.setText("");
+
         comboEmploymentStatus.requestFocus();
     }
 }

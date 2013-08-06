@@ -5,13 +5,15 @@
  */
 package ui.reusable;
 
+import com.vg.scfc.financing.cis.ent.Expenditure;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.math.BigDecimal;
 import java.math.MathContext;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import ui.validator.InputValidator;
+import java.util.List;
+import ui.controller.ExpenditureController;
+import ui.validator.UIValidator;
+import ui.validator.Validator;
 
 /**
  *
@@ -25,6 +27,11 @@ public class ExpendituresPanel extends javax.swing.JPanel implements KeyListener
     public ExpendituresPanel() {
         initComponents();
         initTextBoxesListener();
+        startUpSettings();
+    }
+    
+    private void startUpSettings() {
+        setFieldsEditable(false);
     }
 
     /**
@@ -248,49 +255,45 @@ public class ExpendituresPanel extends javax.swing.JPanel implements KeyListener
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtMonthlyDeductionFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMonthlyDeductionFocusLost
-        monthlyDeduction = validate(txtMonthlyDeduction);
+        monthlyDeduction = new BigDecimal(UIValidator.isNumeric(txtMonthlyDeduction));
         computeTotalExpenditureAndNetIncome();
     }//GEN-LAST:event_txtMonthlyDeductionFocusLost
 
     private void txtMonthlyHouseholdBillFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMonthlyHouseholdBillFocusLost
-        monthlyHouseholdBill = validate(txtMonthlyHouseholdBill);
+        monthlyHouseholdBill = new BigDecimal(UIValidator.isNumeric(txtMonthlyHouseholdBill));
         computeTotalExpenditureAndNetIncome();
     }//GEN-LAST:event_txtMonthlyHouseholdBillFocusLost
 
     private void txtAmortizationFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtAmortizationFocusLost
-        amortization = validate(txtAmortization);
+        amortization = new BigDecimal(UIValidator.isNumeric(txtAmortization));
         computeTotalExpenditureAndNetIncome();
     }//GEN-LAST:event_txtAmortizationFocusLost
 
     private void txtMaintenanceDescFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMaintenanceDescFocusLost
-        if (InputValidator.getInstance().isEmpty(txtMaintenanceDesc.getText())) {
-            txtMaintenance.setText("");
-        }
+        maintenanceDesc = UIValidator.validate(txtMaintenanceDesc);
     }//GEN-LAST:event_txtMaintenanceDescFocusLost
 
     private void txtMaintenanceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMaintenanceFocusLost
-        maintenance = validate(txtMaintenance);
+        maintenance = new BigDecimal(UIValidator.isNumeric(txtMaintenance));
         computeTotalExpenditureAndNetIncome();
     }//GEN-LAST:event_txtMaintenanceFocusLost
 
     private void txtLivingAllowanceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtLivingAllowanceFocusLost
-        livingAllowance = validate(txtLivingAllowance);
+        livingAllowance = new BigDecimal(UIValidator.isNumeric(txtLivingAllowance));
         computeTotalExpenditureAndNetIncome();
     }//GEN-LAST:event_txtLivingAllowanceFocusLost
 
     private void txtEducationDescFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtEducationDescFocusLost
-        if (InputValidator.getInstance().isEmpty(txtEducationDesc.getText())) {
-            txtEducation.setText("");
-        }
+        educationFor = UIValidator.validate(txtEducationDesc);
     }//GEN-LAST:event_txtEducationDescFocusLost
 
     private void txtEducationFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtEducationFocusLost
-        education = validate(txtEducation);
+        education = new BigDecimal(UIValidator.isNumeric(txtEducation));
         computeTotalExpenditureAndNetIncome();
     }//GEN-LAST:event_txtEducationFocusLost
 
     private void txtOthersFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtOthersFocusLost
-        others = validate(txtOthers);
+        others = new BigDecimal(UIValidator.isNumeric(txtOthers));
         computeTotalExpenditureAndNetIncome();
     }//GEN-LAST:event_txtOthersFocusLost
 
@@ -332,6 +335,9 @@ public class ExpendituresPanel extends javax.swing.JPanel implements KeyListener
     private BigDecimal livingAllowance = new BigDecimal("0");
     private BigDecimal education = new BigDecimal("0");
     private BigDecimal others = new BigDecimal("0");
+    private String maintenanceDesc;
+    private String educationFor;
+    private List<Expenditure> expenditures;
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -352,7 +358,7 @@ public class ExpendituresPanel extends javax.swing.JPanel implements KeyListener
             } else if (txtAmortization.isFocusOwner()) {
                 txtMaintenanceDesc.requestFocus();
             } else if (txtMaintenanceDesc.isFocusOwner()) {
-                if (InputValidator.getInstance().isEmpty(txtMaintenanceDesc.getText())) {
+                if (Validator.getInstance().isEmpty(txtMaintenanceDesc.getText())) {
                     txtMaintenance.setEnabled(false);
                     txtMaintenanceDesc.setEnabled(false);
                     txtLivingAllowance.requestFocus();
@@ -364,7 +370,7 @@ public class ExpendituresPanel extends javax.swing.JPanel implements KeyListener
             } else if (txtLivingAllowance.isFocusOwner()) {
                 txtEducationDesc.requestFocus();
             } else if (txtEducationDesc.isFocusOwner()) {
-                if (InputValidator.getInstance().isEmpty(txtEducationDesc.getText())) {
+                if (Validator.getInstance().isEmpty(txtEducationDesc.getText())) {
                     txtEducation.setEnabled(false);
                     txtEducationDesc.setEnabled(false);
                     txtOthers.requestFocus();
@@ -419,18 +425,52 @@ public class ExpendituresPanel extends javax.swing.JPanel implements KeyListener
         txtTotalExpenditure.setText(sumOfExpenditureValues.round(MathContext.UNLIMITED).toString());
     }
 
-    private BigDecimal validate(JTextField field) {
-        if (InputValidator.getInstance().isEmpty(field.getText())) {
-            return new BigDecimal("0");
+    public void setFieldsEditable(boolean value) {
+        txtMonthlyDeduction.setEditable(value);
+        txtMonthlyHouseholdBill.setEditable(value);
+        txtAmortization.setEditable(value);
+        txtMaintenance.setEditable(value);
+        txtMaintenanceDesc.setEditable(value);
+        txtLivingAllowance.setEditable(value);
+        txtEducation.setEditable(value);
+        txtEducationDesc.setEditable(value);
+        txtOthers.setEditable(value);
+    }
+    
+    public void resetToDefault() {
+        txtMonthlyDeduction.setText("");
+        txtMonthlyHouseholdBill.setText("");
+        txtAmortization.setText("");
+        txtMaintenance.setText("");
+        txtMaintenanceDesc.setText("");
+        txtLivingAllowance.setText("");
+        txtEducation.setText("");
+        txtEducationDesc.setText("");
+        txtOthers.setText("");
+        txtTotalExpenditure.setText("0");
+        txtNetIncome.setText("0");
+    }
+    
+    public void setExpenditures(List<Object> objects) {
+        if(objects == null || objects.isEmpty()) {
+            resetToDefault();
         } else {
-            if (InputValidator.getInstance().isNumeric(field.getText())) {
-                return new BigDecimal(field.getText().trim());
-            } else {
-                JOptionPane.showMessageDialog(null, "Please provide numeric value.", "MESSAGE", JOptionPane.WARNING_MESSAGE);
-                field.requestFocus();
-                field.selectAll();
-                return new BigDecimal("0");
+            for (Object object : objects) {
+                Expenditure e = (Expenditure) object;
+                
             }
         }
+    }
+    
+    public boolean saveExpenditures() {
+        List<Object> objects = ExpenditureController.getInstance().createNew(monthlyDeduction, monthlyHouseholdBill, amortization, maintenance, maintenanceDesc, livingAllowance, education, educationFor, others);
+        setExpenditures(objects);
+        return  !objects.isEmpty();
+    }
+    
+    public boolean updateExpenditures() {
+        List<Object> objects = ExpenditureController.getInstance().update("", monthlyDeduction, monthlyHouseholdBill, amortization, maintenance, maintenanceDesc, livingAllowance, education, educationFor, others);
+        setExpenditures(objects);
+        return !objects.isEmpty();
     }
 }

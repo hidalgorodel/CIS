@@ -5,8 +5,13 @@
  */
 package ui.reusable;
 
+import com.vg.scfc.financing.cis.ent.Land;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.math.BigDecimal;
+import java.util.List;
+import ui.controller.LandAssetController;
+import ui.validator.UIValidator;
 
 /**
  *
@@ -21,8 +26,13 @@ public class LandPanel extends javax.swing.JPanel implements KeyListener {
         initComponents();
         initKeyListener();
         initResidentialOptions();
+        startUpSettings();
     }
     
+    private void startUpSettings() {
+        setFieldsEditable(false);
+    }
+
     /**
      * Setup OptionButton
      */
@@ -118,6 +128,11 @@ public class LandPanel extends javax.swing.JPanel implements KeyListener {
 
         txtAreaAgri.setFont(new java.awt.Font("Monospaced", 0, 9)); // NOI18N
         txtAreaAgri.setEnabled(false);
+        txtAreaAgri.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtAreaAgriFocusLost(evt);
+            }
+        });
         add(txtAreaAgri, new org.netbeans.lib.awtextra.AbsoluteConstraints(215, 5, 85, -1));
 
         jLabel2.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
@@ -126,6 +141,11 @@ public class LandPanel extends javax.swing.JPanel implements KeyListener {
 
         txtLocationAgri.setFont(new java.awt.Font("Monospaced", 0, 9)); // NOI18N
         txtLocationAgri.setEnabled(false);
+        txtLocationAgri.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtLocationAgriFocusLost(evt);
+            }
+        });
         add(txtLocationAgri, new org.netbeans.lib.awtextra.AbsoluteConstraints(425, 5, 85, -1));
 
         checkCommercial.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
@@ -143,6 +163,11 @@ public class LandPanel extends javax.swing.JPanel implements KeyListener {
 
         txtAreaCommercial.setFont(new java.awt.Font("Monospaced", 0, 9)); // NOI18N
         txtAreaCommercial.setEnabled(false);
+        txtAreaCommercial.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtAreaCommercialFocusLost(evt);
+            }
+        });
         add(txtAreaCommercial, new org.netbeans.lib.awtextra.AbsoluteConstraints(215, 35, 85, -1));
 
         jLabel4.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
@@ -151,6 +176,11 @@ public class LandPanel extends javax.swing.JPanel implements KeyListener {
 
         txtLocationCommercial.setFont(new java.awt.Font("Monospaced", 0, 9)); // NOI18N
         txtLocationCommercial.setEnabled(false);
+        txtLocationCommercial.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtLocationCommercialFocusLost(evt);
+            }
+        });
         add(txtLocationCommercial, new org.netbeans.lib.awtextra.AbsoluteConstraints(425, 35, 85, -1));
 
         checkResidential.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
@@ -168,6 +198,11 @@ public class LandPanel extends javax.swing.JPanel implements KeyListener {
 
         txtAreaResidential.setFont(new java.awt.Font("Monospaced", 0, 9)); // NOI18N
         txtAreaResidential.setEnabled(false);
+        txtAreaResidential.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtAreaResidentialFocusLost(evt);
+            }
+        });
         add(txtAreaResidential, new org.netbeans.lib.awtextra.AbsoluteConstraints(215, 65, 85, -1));
 
         jLabel6.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
@@ -176,6 +211,11 @@ public class LandPanel extends javax.swing.JPanel implements KeyListener {
 
         txtLocationResidential.setFont(new java.awt.Font("Monospaced", 0, 9)); // NOI18N
         txtLocationResidential.setEnabled(false);
+        txtLocationResidential.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtLocationResidentialFocusLost(evt);
+            }
+        });
         add(txtLocationResidential, new org.netbeans.lib.awtextra.AbsoluteConstraints(425, 65, 85, -1));
 
         jLabel7.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
@@ -193,21 +233,41 @@ public class LandPanel extends javax.swing.JPanel implements KeyListener {
         optionHouse.setFont(new java.awt.Font("Monospaced", 0, 9)); // NOI18N
         optionHouse.setText("House");
         optionHouse.setEnabled(false);
+        optionHouse.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                optionHouseItemStateChanged(evt);
+            }
+        });
         add(optionHouse, new org.netbeans.lib.awtextra.AbsoluteConstraints(35, 95, -1, -1));
 
         optionConcrete.setFont(new java.awt.Font("Monospaced", 0, 9)); // NOI18N
         optionConcrete.setText("Concrete");
         optionConcrete.setEnabled(false);
+        optionConcrete.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                optionConcreteItemStateChanged(evt);
+            }
+        });
         add(optionConcrete, new org.netbeans.lib.awtextra.AbsoluteConstraints(95, 95, -1, -1));
 
         optionSemiConcrete.setFont(new java.awt.Font("Monospaced", 0, 9)); // NOI18N
         optionSemiConcrete.setText("Semi Concrete");
         optionSemiConcrete.setEnabled(false);
+        optionSemiConcrete.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                optionSemiConcreteItemStateChanged(evt);
+            }
+        });
         add(optionSemiConcrete, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 95, -1, -1));
 
         optionShanity.setFont(new java.awt.Font("Monospaced", 0, 9)); // NOI18N
         optionShanity.setText("Shanity");
         optionShanity.setEnabled(false);
+        optionShanity.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                optionShanityFocusLost(evt);
+            }
+        });
         add(optionShanity, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 95, -1, -1));
 
         optionOthers.setFont(new java.awt.Font("Monospaced", 0, 9)); // NOI18N
@@ -222,6 +282,11 @@ public class LandPanel extends javax.swing.JPanel implements KeyListener {
 
         txtOtherDesc.setFont(new java.awt.Font("Monospaced", 0, 9)); // NOI18N
         txtOtherDesc.setEnabled(false);
+        txtOtherDesc.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtOtherDescFocusLost(evt);
+            }
+        });
         add(txtOtherDesc, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 95, 110, -1));
 
         jLabel10.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
@@ -230,6 +295,11 @@ public class LandPanel extends javax.swing.JPanel implements KeyListener {
 
         txtEstValueAgri.setFont(new java.awt.Font("Monospaced", 0, 9)); // NOI18N
         txtEstValueAgri.setEnabled(false);
+        txtEstValueAgri.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtEstValueAgriFocusLost(evt);
+            }
+        });
         add(txtEstValueAgri, new org.netbeans.lib.awtextra.AbsoluteConstraints(646, 5, 120, -1));
 
         jLabel11.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
@@ -238,6 +308,11 @@ public class LandPanel extends javax.swing.JPanel implements KeyListener {
 
         txtEstValueCommercial.setFont(new java.awt.Font("Monospaced", 0, 9)); // NOI18N
         txtEstValueCommercial.setEnabled(false);
+        txtEstValueCommercial.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtEstValueCommercialFocusLost(evt);
+            }
+        });
         add(txtEstValueCommercial, new org.netbeans.lib.awtextra.AbsoluteConstraints(646, 35, 120, -1));
 
         jLabel12.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
@@ -246,12 +321,18 @@ public class LandPanel extends javax.swing.JPanel implements KeyListener {
 
         txtEstValueResidential.setFont(new java.awt.Font("Monospaced", 0, 9)); // NOI18N
         txtEstValueResidential.setEnabled(false);
+        txtEstValueResidential.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtEstValueResidentialFocusLost(evt);
+            }
+        });
         add(txtEstValueResidential, new org.netbeans.lib.awtextra.AbsoluteConstraints(646, 65, 120, -1));
 
         jLabel13.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
         jLabel13.setText("Total Estimated value");
         add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(521, 125, -1, -1));
 
+        txtTotalEstValue.setEditable(false);
         txtTotalEstValue.setFont(new java.awt.Font("Monospaced", 0, 9)); // NOI18N
         add(txtTotalEstValue, new org.netbeans.lib.awtextra.AbsoluteConstraints(646, 120, 120, -1));
     }// </editor-fold>//GEN-END:initComponents
@@ -303,12 +384,76 @@ public class LandPanel extends javax.swing.JPanel implements KeyListener {
     }//GEN-LAST:event_checkResidentialItemStateChanged
 
     private void optionOthersItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_optionOthersItemStateChanged
-        if(optionOthers.isSelected()) {
+        if (optionOthers.isSelected()) {
             txtOtherDesc.setEnabled(true);
         } else {
             txtOtherDesc.setEnabled(false);
         }
     }//GEN-LAST:event_optionOthersItemStateChanged
+
+    private void txtAreaAgriFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtAreaAgriFocusLost
+        agriArea = new BigDecimal(UIValidator.isNumeric(txtAreaAgri));
+    }//GEN-LAST:event_txtAreaAgriFocusLost
+
+    private void txtLocationAgriFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtLocationAgriFocusLost
+        agriLocation = UIValidator.validate(txtLocationAgri);
+    }//GEN-LAST:event_txtLocationAgriFocusLost
+
+    private void txtEstValueAgriFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtEstValueAgriFocusLost
+        agriValue = new BigDecimal(UIValidator.isNumeric(txtEstValueAgri));
+    }//GEN-LAST:event_txtEstValueAgriFocusLost
+
+    private void txtAreaCommercialFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtAreaCommercialFocusLost
+        comArea = new BigDecimal(UIValidator.isNumeric(txtAreaCommercial));
+    }//GEN-LAST:event_txtAreaCommercialFocusLost
+
+    private void txtLocationCommercialFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtLocationCommercialFocusLost
+        comLocation = UIValidator.validate(txtLocationCommercial);
+    }//GEN-LAST:event_txtLocationCommercialFocusLost
+
+    private void txtEstValueCommercialFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtEstValueCommercialFocusLost
+        comValue = new BigDecimal(UIValidator.isNumeric(txtEstValueCommercial));
+    }//GEN-LAST:event_txtEstValueCommercialFocusLost
+
+    private void txtAreaResidentialFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtAreaResidentialFocusLost
+        resArea = new BigDecimal(UIValidator.isNumeric(txtAreaResidential));
+    }//GEN-LAST:event_txtAreaResidentialFocusLost
+
+    private void txtLocationResidentialFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtLocationResidentialFocusLost
+        resLocation = UIValidator.validate(txtLocationResidential);
+    }//GEN-LAST:event_txtLocationResidentialFocusLost
+
+    private void txtEstValueResidentialFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtEstValueResidentialFocusLost
+        resValue = new BigDecimal(UIValidator.isNumeric(txtEstValueResidential));
+    }//GEN-LAST:event_txtEstValueResidentialFocusLost
+
+    private void optionHouseItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_optionHouseItemStateChanged
+        if(optionHouse.isSelected()) {
+            additionalInfo = "HOUSE";
+        }
+    }//GEN-LAST:event_optionHouseItemStateChanged
+
+    private void optionConcreteItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_optionConcreteItemStateChanged
+        if(optionConcrete.isSelected()) {
+            additionalInfo = "CONCRETE";
+        }
+    }//GEN-LAST:event_optionConcreteItemStateChanged
+
+    private void optionSemiConcreteItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_optionSemiConcreteItemStateChanged
+        if(optionSemiConcrete.isSelected()) {
+            additionalInfo = "SEMI CONCRETE";
+        }
+    }//GEN-LAST:event_optionSemiConcreteItemStateChanged
+
+    private void optionShanityFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_optionShanityFocusLost
+        if(optionShanity.isSelected()) {
+            additionalInfo = "SHANITY";
+        }
+    }//GEN-LAST:event_optionShanityFocusLost
+
+    private void txtOtherDescFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtOtherDescFocusLost
+        additionalInfo = UIValidator.validate(txtOtherDesc);
+    }//GEN-LAST:event_txtOtherDescFocusLost
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox checkAgricultural;
@@ -345,6 +490,17 @@ public class LandPanel extends javax.swing.JPanel implements KeyListener {
     private javax.swing.JTextField txtOtherDesc;
     private javax.swing.JTextField txtTotalEstValue;
     // End of variables declaration//GEN-END:variables
+    private BigDecimal agriArea;
+    private String agriLocation;
+    private BigDecimal agriValue;
+    private BigDecimal comArea;
+    ;
+    private String comLocation;
+    private BigDecimal comValue;
+    private BigDecimal resArea;
+    private String resLocation;
+    private BigDecimal resValue;
+    private String additionalInfo;
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -409,54 +565,108 @@ public class LandPanel extends javax.swing.JPanel implements KeyListener {
             }
                 break;
             case KeyEvent.VK_UP:
-                if(txtEstValueResidential.isFocusOwner()) {
-                    if(txtOtherDesc.isEnabled()) {
-                        txtOtherDesc.requestFocus();
-                    } else {
-                        optionOthers.requestFocus();
-                    }
-                } else  if(txtOtherDesc.isFocusOwner()) {
+                if (txtEstValueResidential.isFocusOwner()) {
+                if (txtOtherDesc.isEnabled()) {
+                    txtOtherDesc.requestFocus();
+                } else {
                     optionOthers.requestFocus();
-                } else  if(optionOthers.isFocusOwner()) {
-                    optionShanity.requestFocus();
-                } else  if(optionShanity.isFocusOwner()) {
-                    optionSemiConcrete.requestFocus();
-                } else  if(optionSemiConcrete.isFocusOwner()) {
-                    optionConcrete.requestFocus();
-                } else  if(optionConcrete.isFocusOwner()) {
-                    optionHouse.requestFocus();
-                } else  if(optionHouse.isFocusOwner()) {
-                    txtLocationResidential.requestFocus();
-                } else  if(txtLocationResidential.isFocusOwner()) {
-                    txtAreaResidential.requestFocus();
-                } else  if(txtAreaResidential.isFocusOwner()) {
-                    checkResidential.requestFocus();
-                } else  if(checkResidential.isFocusOwner()) {
-                    if(txtEstValueCommercial.isEnabled()) {
-                        txtEstValueCommercial.requestFocus();
-                    } else {
-                        checkCommercial.requestFocus();
-                    }
-                } else  if(txtEstValueCommercial.isFocusOwner()) {
-                    txtLocationCommercial.requestFocus();
-                } else  if(txtLocationCommercial.isFocusOwner()) {
-                    txtAreaCommercial.requestFocus();
-                } else  if(txtAreaCommercial.isFocusOwner()) {
+                }
+            } else if (txtOtherDesc.isFocusOwner()) {
+                optionOthers.requestFocus();
+            } else if (optionOthers.isFocusOwner()) {
+                optionShanity.requestFocus();
+            } else if (optionShanity.isFocusOwner()) {
+                optionSemiConcrete.requestFocus();
+            } else if (optionSemiConcrete.isFocusOwner()) {
+                optionConcrete.requestFocus();
+            } else if (optionConcrete.isFocusOwner()) {
+                optionHouse.requestFocus();
+            } else if (optionHouse.isFocusOwner()) {
+                txtLocationResidential.requestFocus();
+            } else if (txtLocationResidential.isFocusOwner()) {
+                txtAreaResidential.requestFocus();
+            } else if (txtAreaResidential.isFocusOwner()) {
+                checkResidential.requestFocus();
+            } else if (checkResidential.isFocusOwner()) {
+                if (txtEstValueCommercial.isEnabled()) {
+                    txtEstValueCommercial.requestFocus();
+                } else {
                     checkCommercial.requestFocus();
-                } else  if(checkCommercial.isFocusOwner()) {
-                    if(txtEstValueAgri.isEnabled()) {
-                        txtEstValueAgri.requestFocus();
-                    } else {
-                        checkAgricultural.requestFocus();
-                    }
-                } else  if(txtEstValueAgri.isFocusOwner()) {
-                    txtLocationAgri.requestFocus();
-                } else  if(txtLocationAgri.isFocusOwner()) {
-                    txtAreaAgri.requestFocus();
-                } else  if(txtAreaAgri.isFocusOwner()) {
+                }
+            } else if (txtEstValueCommercial.isFocusOwner()) {
+                txtLocationCommercial.requestFocus();
+            } else if (txtLocationCommercial.isFocusOwner()) {
+                txtAreaCommercial.requestFocus();
+            } else if (txtAreaCommercial.isFocusOwner()) {
+                checkCommercial.requestFocus();
+            } else if (checkCommercial.isFocusOwner()) {
+                if (txtEstValueAgri.isEnabled()) {
+                    txtEstValueAgri.requestFocus();
+                } else {
                     checkAgricultural.requestFocus();
                 }
+            } else if (txtEstValueAgri.isFocusOwner()) {
+                txtLocationAgri.requestFocus();
+            } else if (txtLocationAgri.isFocusOwner()) {
+                txtAreaAgri.requestFocus();
+            } else if (txtAreaAgri.isFocusOwner()) {
+                checkAgricultural.requestFocus();
+            }
                 break;
         }
+    }
+
+    public void setLandAssets() {
+        List<Land> landAssets = LandAssetController.getInstance().findAllLandAssets("");
+        if (landAssets.isEmpty()) {
+            resetToDefault();
+        } else {
+            for (Land land : landAssets) {
+            }
+        }
+    }
+
+    public void setFieldsEditable(boolean value) {
+        checkAgricultural.setEnabled(value);
+        txtAreaAgri.setEditable(value);
+        txtLocationAgri.setEditable(value);
+        txtEstValueAgri.setEditable(value);
+        checkCommercial.setEnabled(value);
+        txtAreaCommercial.setEditable(value);
+        txtLocationCommercial.setEditable(value);
+        txtEstValueCommercial.setEditable(value);
+        checkResidential.setEnabled(value);
+        txtAreaResidential.setEditable(value);
+        txtLocationCommercial.setEditable(value);
+        txtEstValueResidential.setEditable(value);
+        txtOtherDesc.setEditable(value);
+    }
+
+    public void resetToDefault() {
+        checkAgricultural.setSelected(false);
+        txtAreaAgri.setText("");
+        txtLocationAgri.setText("");
+        txtEstValueAgri.setText("");
+        checkCommercial.setSelected(false);
+        txtAreaCommercial.setText("");
+        txtLocationCommercial.setText("");
+        txtEstValueCommercial.setText("");
+        checkResidential.setSelected(false);
+        txtAreaResidential.setText("");
+        txtLocationCommercial.setText("");
+        txtEstValueResidential.setText("");
+        txtOtherDesc.setText("");
+    }
+
+    public boolean saveLandAssets() {
+        boolean isSaved = LandAssetController.getInstance().createNew(agriArea.doubleValue(), agriLocation, agriValue, comArea.doubleValue(), comLocation, comValue, resArea.doubleValue(), resLocation, resValue, additionalInfo);
+        setLandAssets();
+        return isSaved;
+    }
+
+    public boolean updateLandAssets() {
+        boolean isUpdated = LandAssetController.getInstance().update("", agriArea.doubleValue(), agriLocation, agriValue, comArea.doubleValue(), comLocation, comValue, resArea.doubleValue(), resLocation, resValue, additionalInfo);
+        setLandAssets();
+        return isUpdated;
     }
 }

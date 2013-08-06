@@ -27,8 +27,9 @@ public class PersonalInfoController {
         return instance;
     }
     
-    public Object createNewPersonalInfo(String lastname, String firstname, String middlename, Date birthDate, String birthPlace, int age, String gender, String tribe, String religion,
+    public Object createNew(String lastname, String firstname, String middlename, Date birthDate, String birthPlace, int age, String gender, String tribe, String religion,
             String citizenship, String civilStatusOther, String educationalAttainment, String contactNo, String presentAddress, String previousAddress) {
+        
         PersonalInfo p = new PersonalInfo();
         p.setLastName(lastname);
         p.setFirstName(firstname);
@@ -38,14 +39,15 @@ public class PersonalInfoController {
         p.setGender(gender);
         p.setTribe(null);
         p.setReligion(null);
-//        p.setCitizenship();
+        p.setCitizenship(citizenship);
         p.setCivilStatus(civilStatusOther);
         p.setEducation(educationalAttainment);
-//        p.setContact(contact)
+        p.setContactNo(contactNo);
+        
         return new Object();
     }
     
-    public Object updatePersonalInfo(String clientNo, String lastname, String firstname, String middlename, Date birthDate, String birthPlace, int age, String gender, String tribe, String religion,
+    public Object update(String clientNo, String lastname, String firstname, String middlename, Date birthDate, String birthPlace, int age, String gender, String tribe, String religion,
             String citizenship, String civilStatusOther, String educationalAttainment, String contactNo, String presentAddress, String previousAddress) {
          // TODO, find personal info by clientNo
         // update info

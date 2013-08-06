@@ -5,11 +5,13 @@
  */
 package ui.reusable;
 
+import com.vg.scfc.financing.cis.ent.Appliance;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.math.BigDecimal;
 import javax.swing.JOptionPane;
-import ui.validator.InputValidator;
+import ui.controller.ApplianceAssetsController;
+import ui.validator.UIValidator;
 
 /**
  *
@@ -23,11 +25,16 @@ public class AppliancesPanel extends javax.swing.JPanel implements KeyListener {
     public AppliancesPanel() {
         initComponents();
         initKeyListeners();
+        startUpSettings();
     }
-    
+
     private void initKeyListeners() {
         comboApplianceType.addKeyListener(this);
         txtEstValue.addKeyListener(this);
+    }
+    
+    private void startUpSettings() {
+        setFieldsEditable(false);
     }
 
     /**
@@ -81,6 +88,11 @@ public class AppliancesPanel extends javax.swing.JPanel implements KeyListener {
 
         comboApplianceType.setFont(new java.awt.Font("Monospaced", 0, 9)); // NOI18N
         comboApplianceType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Television", "Refrigerator", "Washing Machine", "Aircon Unit", "Computer", "DVD/VCD", "Others" }));
+        comboApplianceType.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                comboApplianceTypeItemStateChanged(evt);
+            }
+        });
         add(comboApplianceType, new org.netbeans.lib.awtextra.AbsoluteConstraints(55, 105, 144, -1));
 
         jLabel3.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
@@ -104,19 +116,36 @@ public class AppliancesPanel extends javax.swing.JPanel implements KeyListener {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtEstValueFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtEstValueFocusLost
-        if(InputValidator.getInstance().isEmpty(txtEstValue.getText())) {
-            JOptionPane.showMessageDialog(null, "Please provide an estimated value.", "MESSAGE", JOptionPane.WARNING_MESSAGE);
-            txtEstValue.requestFocus();
-        } else {
-            if(InputValidator.getInstance().isNumeric(txtEstValue.getText())) {
-                BigDecimal estValue = new BigDecimal(txtEstValue.getText());
-            } else {
-                JOptionPane.showMessageDialog(null, "Please provide numeric value.", "MESSAGE", JOptionPane.WARNING_MESSAGE);
-                txtEstValue.requestFocus();
-                txtEstValue.selectAll();
-            }
-        }
+        estimatedValue = new BigDecimal(UIValidator.isNumeric(txtEstValue));
     }//GEN-LAST:event_txtEstValueFocusLost
+
+    private void comboApplianceTypeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboApplianceTypeItemStateChanged
+        switch (comboApplianceType.getSelectedIndex()) {
+            case 0:
+                type = "TELEVISION";
+                break;
+            case 1:
+                type = "REFRIGERATOR";
+                break;
+            case 2:
+                type = "WASHING MACHINE";
+                break;
+            case 3:
+                type = "AIRCON UNIT";
+                break;
+            case 4:
+                type = "COMPUTER";
+                break;
+            case 5:
+                type = "DVD/VCD";
+                break;
+            case 6:
+                do {
+                type = JOptionPane.showInputDialog(null, "Enter Type:", "SYSTEM MESSAGE", JOptionPane.QUESTION_MESSAGE);
+            } while (!type.equals(""));
+
+        }
+    }//GEN-LAST:event_comboApplianceTypeItemStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox comboApplianceType;
@@ -128,6 +157,8 @@ public class AppliancesPanel extends javax.swing.JPanel implements KeyListener {
     private javax.swing.JTextField txtEstValue;
     private javax.swing.JTextField txtTotalEstValue;
     // End of variables declaration//GEN-END:variables
+    private String type;
+    private BigDecimal estimatedValue;
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -152,4 +183,59 @@ public class AppliancesPanel extends javax.swing.JPanel implements KeyListener {
                 break;
         }
     }
+
+    public void setFieldsEditable(boolean value) {
+        comboApplianceType.setEnabled(value);
+        txtEstValue.setEditable(value);
+    }
+
+    public void resetToDefault() {
+        comboApplianceType.setSelectedIndex(0);
+        txtEstValue.setText("");
+    }
+
+    public void setApplianceAsset(Object o) {
+        if (o == null) {
+            resetToDefault();
+        } else {
+            Appliance a = (Appliance) o;
+            switch (a.getType()) {
+                case "TELEVISION":
+                    comboApplianceType.setSelectedIndex(0);
+                    break;
+                case "REFRIGERATOR":
+                    comboApplianceType.setSelectedIndex(1);
+                    break;
+                case "WASHING MACHINE":
+                    comboApplianceType.setSelectedIndex(2);
+                    break;
+                case "AIRCON UNIT":
+                    comboApplianceType.setSelectedIndex(3);
+                    break;
+                case "COMPUTER":
+                    comboApplianceType.setSelectedIndex(4);
+                    break;
+                case "DVD/VCD":
+                    comboApplianceType.setSelectedIndex(5);
+                    break;
+                default:
+                    comboApplianceType.setSelectedIndex(6);
+                    break;
+            }
+            txtEstValue.setText(a.getAmount() + "");
+        }
+    }
+
+    public boolean saveApplianceAsset() {
+        Object o = ApplianceAssetsController.getInstance().createNew(type, estimatedValue);
+        setApplianceAsset(o);
+        return o != null;
+    }
+
+    public boolean updateApplianceAsset() {
+        Object o = ApplianceAssetsController.getInstance().update("", type, estimatedValue);
+        setApplianceAsset(o);
+        return o != null;
+    }
+
 }

@@ -5,8 +5,11 @@
  */
 package ui.reusable;
 
+import com.vg.scfc.financing.cis.ent.Sibling;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import ui.controller.SiblingController;
+import ui.validator.UIValidator;
 
 /**
  *
@@ -20,8 +23,13 @@ public class SiblingsPanel extends javax.swing.JPanel implements KeyListener {
     public SiblingsPanel() {
         initComponents();
         initTextBoxesListener();
+        startUpSettings();
     }
     
+    private void startUpSettings() {
+        setFieldsEditable(false);
+    }
+
     /**
      * Set TextBox Listener
      */
@@ -54,6 +62,11 @@ public class SiblingsPanel extends javax.swing.JPanel implements KeyListener {
         add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 10, -1, -1));
 
         txtSiblingName.setFont(new java.awt.Font("Monospaced", 0, 9)); // NOI18N
+        txtSiblingName.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtSiblingNameFocusLost(evt);
+            }
+        });
         add(txtSiblingName, new org.netbeans.lib.awtextra.AbsoluteConstraints(93, 5, 255, -1));
 
         jLabel2.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
@@ -61,6 +74,11 @@ public class SiblingsPanel extends javax.swing.JPanel implements KeyListener {
         add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 35, -1, -1));
 
         txtSiblingAddress.setFont(new java.awt.Font("Monospaced", 0, 9)); // NOI18N
+        txtSiblingAddress.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtSiblingAddressFocusLost(evt);
+            }
+        });
         add(txtSiblingAddress, new org.netbeans.lib.awtextra.AbsoluteConstraints(93, 30, 255, -1));
 
         jLabel3.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
@@ -68,8 +86,25 @@ public class SiblingsPanel extends javax.swing.JPanel implements KeyListener {
         add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 60, -1, -1));
 
         txtSiblingContact.setFont(new java.awt.Font("Monospaced", 0, 9)); // NOI18N
+        txtSiblingContact.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtSiblingContactFocusLost(evt);
+            }
+        });
         add(txtSiblingContact, new org.netbeans.lib.awtextra.AbsoluteConstraints(93, 55, 140, -1));
     }// </editor-fold>//GEN-END:initComponents
+
+    private void txtSiblingNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSiblingNameFocusLost
+        name = UIValidator.validate(txtSiblingName);
+    }//GEN-LAST:event_txtSiblingNameFocusLost
+
+    private void txtSiblingAddressFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSiblingAddressFocusLost
+        address = UIValidator.validate(txtSiblingAddress);
+    }//GEN-LAST:event_txtSiblingAddressFocusLost
+
+    private void txtSiblingContactFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSiblingContactFocusLost
+        contact = UIValidator.isNumeric(txtSiblingContact);
+    }//GEN-LAST:event_txtSiblingContactFocusLost
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
@@ -79,7 +114,10 @@ public class SiblingsPanel extends javax.swing.JPanel implements KeyListener {
     private javax.swing.JTextField txtSiblingContact;
     private javax.swing.JTextField txtSiblingName;
     // End of variables declaration//GEN-END:variables
-
+    private String name;
+    private String address;
+    private String contact;
+    
     @Override
     public void keyTyped(KeyEvent e) {
     }
@@ -106,5 +144,40 @@ public class SiblingsPanel extends javax.swing.JPanel implements KeyListener {
             }
                 break;
         }
+    }
+
+    public void setFieldsEditable(boolean value) {
+        txtSiblingName.setEditable(value);
+        txtSiblingAddress.setEditable(value);
+        txtSiblingContact.setEditable(value);
+    }
+    
+    public void resetToDefault() {
+        txtSiblingName.setText("");
+        txtSiblingAddress.setText("");
+        txtSiblingContact.setText("");
+    }
+    
+    public void setSibling(Object o) {
+        if(o == null) {
+            resetToDefault();
+        } else {
+            Sibling s = (Sibling) o;
+            txtSiblingName.setText(s.getSiblingName());
+            txtSiblingAddress.setText(s.getSiblingAddress());
+            txtSiblingContact.setText(s.getSiblingContactNo());
+        }
+    }
+    
+    public boolean saveSibling() {
+        Object o = SiblingController.getInstance().createNew(name, address, contact);
+        setSibling(o);
+        return o != null;
+    }
+    
+    public boolean updateSibling() {
+        Object o = SiblingController.getInstance().update("", name, address, contact);
+        setSibling(o);
+        return o != null;
     }
 }

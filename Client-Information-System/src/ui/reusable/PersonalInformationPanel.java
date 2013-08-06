@@ -12,11 +12,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Date;
 import java.util.List;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 import ui.controller.PersonalInfoController;
-import ui.messages.ErrorMessage;
-import ui.validator.InputValidator;
+import ui.validator.UIValidator;
 
 /**
  *
@@ -34,6 +31,11 @@ public class PersonalInformationPanel extends javax.swing.JPanel implements KeyL
         initComboBoxListener();
         initRadioButtonListener();
         initComboBoxValues();
+        startUpSettings();
+    }
+    
+    private void startUpSettings() {
+        setFieldsEditable(false);
     }
 
     /**
@@ -388,15 +390,15 @@ public class PersonalInformationPanel extends javax.swing.JPanel implements KeyL
     }//GEN-LAST:event_comboStatusFocusLost
 
     private void txtLastNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtLastNameFocusLost
-        lastname = validate(txtLastName);
+        lastname = UIValidator.validate(txtLastName);
     }//GEN-LAST:event_txtLastNameFocusLost
 
     private void txtFirstNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtFirstNameFocusLost
-        firstname = validate(txtFirstName);
+        firstname = UIValidator.validate(txtFirstName);
     }//GEN-LAST:event_txtFirstNameFocusLost
 
     private void txtMiddleNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMiddleNameActionPerformed
-        middlename = validate(txtMiddleName);
+        middlename = UIValidator.validate(txtMiddleName);
     }//GEN-LAST:event_txtMiddleNameActionPerformed
 
     private void txtBirthDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBirthDateActionPerformed
@@ -416,14 +418,7 @@ public class PersonalInformationPanel extends javax.swing.JPanel implements KeyL
     }//GEN-LAST:event_optionFemaleItemStateChanged
 
     private void txtContactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtContactActionPerformed
-        String contactTemp = validate(txtContact);
-        if (InputValidator.getInstance().isNumeric(contactTemp)) {
-            contact = contactTemp;
-        } else {
-            JOptionPane.showMessageDialog(null, ErrorMessage.NON_NUMERIC, ErrorMessage.ERROR_MESSAGE_TITLE, JOptionPane.WARNING_MESSAGE);
-            txtContact.requestFocus();
-            txtContact.setText("");
-        }
+        contact = UIValidator.isNumeric(txtContact);
     }//GEN-LAST:event_txtContactActionPerformed
 
     private void comboMarriedOptionItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboMarriedOptionItemStateChanged
@@ -463,15 +458,15 @@ public class PersonalInformationPanel extends javax.swing.JPanel implements KeyL
     }//GEN-LAST:event_comboEducationStatusItemStateChanged
 
     private void txtBirthPlaceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBirthPlaceFocusLost
-        birthPlace = validate(txtBirthPlace);
+        birthPlace = UIValidator.validate(txtBirthPlace);
     }//GEN-LAST:event_txtBirthPlaceFocusLost
 
     private void txtPresentAddressFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPresentAddressFocusLost
-        presentAddress = validate(txtPresentAddress);
+        presentAddress = UIValidator.validate(txtPresentAddress);
     }//GEN-LAST:event_txtPresentAddressFocusLost
 
     private void txtPreviousAddressFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPreviousAddressFocusLost
-        previousAddress = validate(txtPreviousAddress);
+        previousAddress = UIValidator.validate(txtPreviousAddress);
     }//GEN-LAST:event_txtPreviousAddressFocusLost
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -617,7 +612,7 @@ public class PersonalInformationPanel extends javax.swing.JPanel implements KeyL
         }
     }
 
-    public void setFieldsToEditable(boolean value) {
+    public void setFieldsEditable(boolean value) {
         txtLastName.setEditable(value);
         txtFirstName.setEditable(value);
         txtMiddleName.setEditable(value);
@@ -655,17 +650,6 @@ public class PersonalInformationPanel extends javax.swing.JPanel implements KeyL
         comboCitizenship.setSelectedIndex(0);
         txtPresentAddress.setText("");
         txtPreviousAddress.setText("");
-    }
-
-    private String validate(JTextField field) {
-        String fieldValue = field.getText().trim();
-        if (InputValidator.getInstance().isEmpty(fieldValue)) {
-            JOptionPane.showMessageDialog(null, ErrorMessage.EMPTY_FIELD, ErrorMessage.ERROR_MESSAGE_TITLE, JOptionPane.WARNING_MESSAGE);
-            field.requestFocus();
-            return "";
-        } else {
-            return InputValidator.getInstance().newLineRemover(fieldValue).toUpperCase();
-        }
     }
 
     public void setPersonalInfo(Object o) {
@@ -739,7 +723,7 @@ public class PersonalInformationPanel extends javax.swing.JPanel implements KeyL
     }
 
     public boolean savePersonalInfo() {
-        Object o = PersonalInfoController.getInstance().createNewPersonalInfo(lastname, firstname, middlename, birthDate,
+        Object o = PersonalInfoController.getInstance().createNew(lastname, firstname, middlename, birthDate,
                 birthPlace, age, gender, tribe, religion, citizenship, civilStatus, educationalAttainment, contact,
                 presentAddress, previousAddress);
         setPersonalInfo(o);
@@ -747,7 +731,7 @@ public class PersonalInformationPanel extends javax.swing.JPanel implements KeyL
     }
 
     public boolean updatePersonalInfo() {
-        Object o = PersonalInfoController.getInstance().updatePersonalInfo("", lastname, firstname, middlename, birthDate,
+        Object o = PersonalInfoController.getInstance().update("", lastname, firstname, middlename, birthDate,
                 birthPlace, age, gender, tribe, religion, citizenship, civilStatus, educationalAttainment, contact,
                 presentAddress, previousAddress);
         setPersonalInfo(o);

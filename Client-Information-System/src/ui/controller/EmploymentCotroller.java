@@ -5,6 +5,8 @@
  */
 package ui.controller;
 
+import com.vg.scfc.financing.cis.ent.Employment;
+
 /**
  *
  * @author rodel
@@ -20,11 +22,20 @@ public class EmploymentCotroller {
         return instance;
     }
     
-    public Object createNewEmploymentRecord(String status, String positionDept, String companyEmployer, String address, String contactNo, String natureOfBuss, int yearsInService) {
+    public Object createNew(String status, String positionDept, String companyEmployer, String address, String contactNo, String natureOfBuss, int yearsInService) {
+        Employment e = new Employment();
+        e.setEmpStatus(status);
+        e.setEmpPosition(positionDept);
+        e.setEmpCompany(companyEmployer);
+        e.setEmpAddress(address);
+        e.setEmpContactNo(contactNo);
+        e.setEmpNature(status);
+//        e.setEmpYearsInService();
+        
         return new Object();
     }
     
-    public Object updateEmploymentRecord(String clientNo, String status, String positionDept, String companyEmployer, String address, String contactNo, String natureOfBuss, int yearsInService) {
+    public Object update(String clientNo, String status, String positionDept, String companyEmployer, String address, String contactNo, String natureOfBuss, int yearsInService) {
         return new Object();
     }
 
